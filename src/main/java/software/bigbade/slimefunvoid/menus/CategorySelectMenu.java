@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.api.IResearchCategory;
 import software.bigbade.slimefunvoid.utils.VoidResearchHelper;
-import software.bigbade.slimefunvoid.utils.VoidCategories;
+import software.bigbade.slimefunvoid.api.VoidCategories;
 
 public class CategorySelectMenu extends ChestMenu {
     public CategorySelectMenu() {

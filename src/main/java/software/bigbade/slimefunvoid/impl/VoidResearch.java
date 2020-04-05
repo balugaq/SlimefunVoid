@@ -47,7 +47,7 @@ public class VoidResearch implements IVoidResearch {
 
     @Override
     public void updateStrings(ChatColor color) {
-        for(int i = 0; i < lore.size(); i++)
+        for (int i = 0; i < lore.size(); i++)
             lore.set(i, color + lore.get(i));
         name = color + name;
     }
@@ -55,5 +55,17 @@ public class VoidResearch implements IVoidResearch {
     @Override
     public long getResearchTime() {
         return researchTime;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof IVoidResearch)
+            return ((IVoidResearch) obj).getName().equals(name);
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }

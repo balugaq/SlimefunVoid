@@ -8,8 +8,8 @@ import me.mrCookieSlime.bstats.bukkit.Metrics;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
-import software.bigbade.slimefunvoid.blocks.VoidResearchBench;
-import software.bigbade.slimefunvoid.items.VoidBag;
+import software.bigbade.slimefunvoid.utils.ItemManager;
+import software.bigbade.slimefunvoid.utils.ListenerManager;
 
 import java.util.logging.Logger;
 
@@ -27,16 +27,13 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
         Category category = new Category(new NamespacedKey(this, "slimevoid_category"), new CustomItem(Material.OBSIDIAN, "&5SlimeVoid"));
         category.register();
 
-        registerItems(category);
+        new ItemManager(category).registerItems();
+
+        new ListenerManager().registerListeners();
     }
 
     private static void setInstance(SlimefunVoid instance) {
         SlimefunVoid.instance = instance;
-    }
-
-    private void registerItems(Category category) {
-        new VoidResearchBench(category).register(this);
-        new VoidBag(category).register(this);
     }
 
     @Override
@@ -49,7 +46,7 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
         return "https://github.com/BigBadE/SlimefunVoid/issues";
     }
 
-    public static JavaPlugin getInstance() { return instance; }
+    public static SlimefunVoid getInstance() { return instance; }
 
     public static Logger getPluginLogger() {
         return instance.getLogger();

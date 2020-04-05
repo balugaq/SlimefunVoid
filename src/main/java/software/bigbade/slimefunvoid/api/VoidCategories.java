@@ -1,7 +1,6 @@
-package software.bigbade.slimefunvoid.utils;
+package software.bigbade.slimefunvoid.api;
 
 import org.bukkit.ChatColor;
-import software.bigbade.slimefunvoid.api.IResearchCategory;
 import software.bigbade.slimefunvoid.impl.ResourceCategory;
 
 public enum VoidCategories {
