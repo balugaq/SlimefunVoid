@@ -14,7 +14,6 @@ import software.bigbade.slimefunvoid.blocks.VoidResearchBench;
 import software.bigbade.slimefunvoid.utils.VoidResearchHelper;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

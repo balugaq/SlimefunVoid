@@ -2,6 +2,7 @@ package software.bigbade.slimefunvoid.utils;
 
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import software.bigbade.slimefunvoid.SlimefunVoid;
+import software.bigbade.slimefunvoid.blocks.VoidAltar;
 import software.bigbade.slimefunvoid.blocks.VoidPortal;
 import software.bigbade.slimefunvoid.blocks.VoidResearchBench;
 import software.bigbade.slimefunvoid.items.VoidBag;
@@ -16,6 +17,8 @@ public class ItemManager {
     public void registerItems() {
         new VoidResearchBench(category).register(SlimefunVoid.getInstance());
         new VoidBag(category).register(SlimefunVoid.getInstance());
-        new VoidPortal(category).register(SlimefunVoid.getInstance());
+        VoidPortal portal = new VoidPortal(category);
+        portal.register(SlimefunVoid.getInstance());
+        new VoidAltar(category, portal).register(SlimefunVoid.getInstance());
     }
 }
