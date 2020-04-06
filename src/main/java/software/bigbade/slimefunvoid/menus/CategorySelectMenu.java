@@ -6,8 +6,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.api.IResearchCategory;
-import software.bigbade.slimefunvoid.utils.VoidResearchHelper;
 import software.bigbade.slimefunvoid.api.VoidCategories;
+import software.bigbade.slimefunvoid.utils.VoidResearchHelper;
+
+import java.util.Objects;
 
 public class CategorySelectMenu extends ChestMenu {
     public CategorySelectMenu() {
@@ -22,6 +24,9 @@ public class CategorySelectMenu extends ChestMenu {
 
         for(int i = 0; i < VoidCategories.values().length; i++) {
             addMenuClickHandler(i, (player, slot, item, cursor, action) -> {
+                Objects.requireNonNull(item.getItemMeta());
+                if(item.getItemMeta().getDisplayName().startsWith(ChatColor.MAGIC.toString(), 2))
+                    return false;
                 selectMenu.open(player, VoidCategories.values()[slot].getCategory());
                 return false;
             });
@@ -37,7 +42,7 @@ public class CategorySelectMenu extends ChestMenu {
                     continue;
                 }
                 research = VoidResearchHelper.getResearched(player, category);
-                max = category.getResearches().size()-1;
+                max = category.getResearches().size();
                 replaceExistingItem(i, new CustomItem(Material.PAPER, category.getColor() + category.getName() + " (" + research + "/" + category.getResearches().size() + ")"));
             }
         });

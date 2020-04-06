@@ -2,6 +2,7 @@ package software.bigbade.slimefunvoid.listeners;
 
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -12,6 +13,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -20,11 +22,13 @@ import software.bigbade.slimefunvoid.api.VoidCategories;
 import software.bigbade.slimefunvoid.utils.VoidResearchHelper;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Random;
 
 public class VoidResearchPopulateListener implements Listener {
     private Random random = new Random();
-    private static final EntityType[] DROPPABLE = new EntityType[]{EntityType.IRON_GOLEM, EntityType.ENDERMAN, EntityType.VILLAGER, EntityType.ZOMBIE_VILLAGER, EntityType.EVOKER, EntityType.WITCH, EntityType.ILLUSIONER, EntityType.PILLAGER, EntityType.VINDICATOR};
+
+    private static final EntityType[] DROPABLE = new EntityType[]{EntityType.IRON_GOLEM, EntityType.ENDERMAN, EntityType.VILLAGER, EntityType.ZOMBIE_VILLAGER, EntityType.EVOKER, EntityType.WITCH, EntityType.ILLUSIONER, EntityType.PILLAGER, EntityType.VINDICATOR};
 
     @EventHandler
     public void onChestOpen(PlayerInteractEvent event) {
@@ -36,10 +40,20 @@ public class VoidResearchPopulateListener implements Listener {
         Chest chest = (Chest) event.getClickedBlock().getState();
         if (chest.getLootTable() == null)
             return;
-        if (getsResearch(5, event.getPlayer())) {
-            ItemStack item = getVoidResearch(event.getPlayer());
-            if (item != null)
-                chest.getBlockInventory().setItem(random.nextInt(28), item);
+
+        boolean inTheEnd = Objects.requireNonNull(event.getPlayer().getLocation().getWorld()).getEnvironment() == World.Environment.THE_END;
+        addResearch((inTheEnd ? 5 : 1), chest.getBlockInventory(), event.getPlayer());
+        if (inTheEnd && random.nextInt(2) == 0) {
+            addResearch(1, chest.getBlockInventory(), event.getPlayer());
+        }
+    }
+
+    private void addResearch(int chance, Inventory inventory, Player player) {
+        if (getsResearch(chance, player)) {
+            ItemStack item = getVoidResearch(player);
+            if (item != null) {
+                inventory.setItem(random.nextInt(28), item);
+            }
         }
     }
 
@@ -48,13 +62,9 @@ public class VoidResearchPopulateListener implements Listener {
         if (event.getRightClicked().getType() != EntityType.MINECART_CHEST)
             return;
         StorageMinecart minecart = (StorageMinecart) event.getRightClicked();
-        if(minecart.getLootTable() == null)
+        if (minecart.getLootTable() == null)
             return;
-        if (getsResearch(5, event.getPlayer())) {
-            ItemStack item = getVoidResearch(event.getPlayer());
-            if (item != null)
-                minecart.getInventory().setItem(random.nextInt(28), item);
-        }
+        addResearch(5, minecart.getInventory(), event.getPlayer());
     }
 
     @EventHandler
@@ -62,7 +72,7 @@ public class VoidResearchPopulateListener implements Listener {
         Player player = event.getEntity().getKiller();
         if (player == null)
             return;
-        for (EntityType type : DROPPABLE) {
+        for (EntityType type : DROPABLE) {
             if (event.getEntity().getType() == type) {
                 if (getsResearch(50, player)) {
                     ItemStack item = getVoidResearch(player);
