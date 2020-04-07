@@ -6,6 +6,7 @@ import software.bigbade.slimefunvoid.blocks.VoidAltar;
 import software.bigbade.slimefunvoid.blocks.VoidPortal;
 import software.bigbade.slimefunvoid.blocks.VoidResearchBench;
 import software.bigbade.slimefunvoid.items.VoidBag;
+import software.bigbade.slimefunvoid.items.wands.BasicWand;
 
 public class ItemManager {
     private final Category category;
@@ -20,5 +21,6 @@ public class ItemManager {
         VoidPortal portal = new VoidPortal(category);
         portal.register(SlimefunVoid.getInstance());
         new VoidAltar(category, portal).register(SlimefunVoid.getInstance());
+        new BasicWand(category).register(SlimefunVoid.getInstance());
     }
 }

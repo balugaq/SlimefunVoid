@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockBreakHandler;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockPlaceHandler;
@@ -20,7 +19,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +35,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class VoidPortal extends SlimefunItem {
     private ChestMenu menu = new ChestMenu(SlimefunVoid.getInstance(), "&5Void Portal");
@@ -47,7 +44,7 @@ public class VoidPortal extends SlimefunItem {
     private RitualMenu ritualMenu = new RitualMenu(this);
 
     @Getter
-    private List<VoidAltarLocation> altars = new ArrayList<>();
+    private List<VoidPortalData> altars = new ArrayList<>();
 
     public VoidPortal(Category category) {
         super(category, Items.VOID_PORTAL, RecipeType.ANCIENT_ALTAR, new ItemStack[]{Items.VOID_ALTAR, RecipeItems.ENCHANTING_TABLE, Items.VOID_ALTAR,
@@ -94,7 +91,7 @@ public class VoidPortal extends SlimefunItem {
             if (altar == null || !altar.getType().equals(Material.END_PORTAL_FRAME)) {
                 return false;
             }
-            ritualMenu.open(getAltar(altar.getLocation()), player);
+            ritualMenu.open(getPortalData(altar.getLocation()), player);
             return false;
         });
 
@@ -122,8 +119,8 @@ public class VoidPortal extends SlimefunItem {
         if(block == null)
             return;
         String owner = BlockStorage.getLocationInfo(block.getLocation(), "owner");
-        if (getAltar(block.getLocation()) == null)
-            altars.add(new VoidAltarLocation(block.getLocation()));
+        if (getPortalData(block.getLocation()) == null)
+            altars.add(new VoidPortalData(block.getLocation()));
         if (owner.equals(event.getPlayer().getUniqueId().toString())) {
             menu.open(event.getPlayer());
         }
@@ -131,18 +128,16 @@ public class VoidPortal extends SlimefunItem {
 
     private boolean onBlockPlace(BlockPlaceEvent event, ItemStack item) {
         BlockStorage.addBlockInfo(event.getBlock(), "owner", event.getPlayer().getUniqueId().toString());
-        altars.add(new VoidAltarLocation(event.getBlock().getLocation()));
+        altars.add(new VoidPortalData(event.getBlock().getLocation()));
         return true;
     }
 
     private boolean onBlockBreak(BlockBreakEvent event, ItemStack item, int fortune, List<ItemStack> drops) {
-        VoidAltarLocation location = getAltar(event.getBlock().getLocation());
-        if(location==null) {
+        VoidPortalData data = getPortalData(event.getBlock().getLocation());
+        if(data==null) {
             return true;
         }
-        if(location.getAltars().size() > 0) {
-            for(Location location1 : location.getAltars())
-                System.out.println(location1);
+        if(data.getAltars().size() > 0) {
             event.getPlayer().sendMessage(ChatColor.RED + "You must break all altars before you break the portal.");
             event.setCancelled(true);
             return false;
@@ -150,9 +145,21 @@ public class VoidPortal extends SlimefunItem {
         return true;
     }
 
+    public static void checkAltars(VoidPortalData data, Location location) {
+        for (int x = -2; x < 3; x += 2) {
+            for (int z = -2; z < 3; z += 2) {
+                Location newLocation = location.clone().add(x, 0, z);
+                Block block = newLocation.getBlock();
+                if (block.getType().equals(Material.END_STONE_BRICKS) && BlockStorage.check(newLocation, Items.VOID_ALTAR.getItemID()) && !data.getAltars().contains(newLocation)) {
+                    data.getAltars().add(newLocation);
+                }
+            }
+        }
+    }
+
     @Nullable
-    public VoidAltarLocation getAltar(Location location) {
-        for (VoidAltarLocation altar : altars) {
+    public VoidPortalData getPortalData(Location location) {
+        for (VoidPortalData altar : altars) {
             if (altar.getPortal().equals(location))
                 return altar;
         }
@@ -160,7 +167,7 @@ public class VoidPortal extends SlimefunItem {
     }
 
     @RequiredArgsConstructor
-    public static class VoidAltarLocation {
+    public static class VoidPortalData {
         @Getter
         @Setter
         private boolean inUse = false;

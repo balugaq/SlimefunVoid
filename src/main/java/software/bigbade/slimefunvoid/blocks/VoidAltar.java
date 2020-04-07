@@ -2,6 +2,7 @@ package software.bigbade.slimefunvoid.blocks;
 
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
+import lombok.SneakyThrows;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
@@ -17,6 +18,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -30,10 +32,9 @@ import software.bigbade.slimefunvoid.items.Items;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.BlockingQueue;
 
 public class VoidAltar extends SlimefunItem {
-    private VoidPortal portal;
+    private final VoidPortal portal;
 
     public VoidAltar(Category category, VoidPortal portal) {
         super(category, Items.VOID_ALTAR, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{});
@@ -53,18 +54,21 @@ public class VoidAltar extends SlimefunItem {
     private void onBlockUse(PlayerRightClickEvent event) {
         Player player = event.getPlayer();
         Block block = prepareMenuOpen(event);
-        if(block == null)
+        if (block == null)
             return;
         Item item = getItem(block);
-        VoidPortal.VoidAltarLocation location = findPortal(block.getLocation(), player);
+        VoidPortal.VoidPortalData location = findPortal(block.getLocation());
         if (location == null) {
             player.sendMessage("This altar is corrupted!");
             return;
         }
-        if(location.isInUse())
+        if (location.isInUse())
             return;
-        if (item != null) {
-            event.getPlayer().getInventory().addItem(item.getItemStack());
+        if (item != null && !location.isInUse()) {
+            ItemStack stored = getStoredItem(block);
+            if (stored != null) {
+                event.getPlayer().getInventory().addItem();
+            }
             item.remove();
         } else {
             ItemStack heldItem = player.getInventory().getItemInMainHand();
@@ -72,9 +76,18 @@ public class VoidAltar extends SlimefunItem {
                 player.sendMessage(ChatColor.RED + "You have to hold an item to put on the altar");
                 return;
             }
-            System.out.println("Dropping item");
-            dropItem(player, block);
+            dropItem(player, player.getInventory().getItemInMainHand(), block);
         }
+    }
+
+    @SneakyThrows
+    @Nullable
+    public static ItemStack getStoredItem(Block block) {
+        if (!BlockStorage.hasBlockInfo(block)) return null;
+        String data = BlockStorage.getLocationInfo(block.getLocation(), "dropped");
+        YamlConfiguration configuration = new YamlConfiguration();
+        configuration.loadFromString(data);
+        return configuration.getItemStack("item");
     }
 
     public static Block prepareMenuOpen(PlayerRightClickEvent event) {
@@ -84,16 +97,18 @@ public class VoidAltar extends SlimefunItem {
         return clicked.orElse(null);
     }
 
-    private void dropItem(Player player, Block block) {
-        ItemStack hand = player.getInventory().getItemInMainHand();
-        ItemStack stack = new CustomItem(hand, 1);
+    public static void dropItem(Player player, ItemStack item, Block block) {
+        ItemStack stack = new ItemStack(item);
+        stack.setAmount(1);
 
         if (player.getGameMode() != GameMode.CREATIVE) {
-            ItemUtils.consumeItem(hand, false);
+            ItemUtils.consumeItem(item, false);
         }
 
         String nametag = ItemUtils.getItemName(stack);
-        Item entity = block.getWorld().dropItem(block.getLocation().add(0.5, 1.2, 0.5), new CustomItem(stack, "&5&dALTAR &3Probe - &e" + System.nanoTime()));
+        CustomItem dropped = new CustomItem(stack, "VoidItem - " + System.currentTimeMillis());
+        storeItem(stack, block);
+        Item entity = block.getWorld().dropItem(block.getLocation().add(0.5, 1.2, 0.5), dropped);
         entity.setVelocity(new Vector(0, 0.1, 0));
         SlimefunUtils.markAsNoPickup(entity, "void_altar_item");
         entity.setCustomNameVisible(true);
@@ -112,9 +127,9 @@ public class VoidAltar extends SlimefunItem {
 
     private boolean onBlockBreak(BlockBreakEvent event, ItemStack item, int fortune, List<ItemStack> drops) {
         Item held = getItem(event.getBlock());
-        VoidPortal.VoidAltarLocation location = portal.getAltar(event.getBlock().getLocation());
+        VoidPortal.VoidPortalData location = portal.getPortalData(event.getBlock().getLocation());
         if (held != null) {
-            event.getPlayer().getInventory().addItem(held.getItemStack());
+            drops.add(new ItemStack(held.getItemStack().getType()));
             held.remove();
         }
         if (location != null) {
@@ -124,37 +139,45 @@ public class VoidAltar extends SlimefunItem {
     }
 
     private boolean onBlockPlace(BlockPlaceEvent event, ItemStack item) {
-        if (findPortal(event.getBlock().getLocation(), event.getPlayer()) != null)
+        if (findPortal(event.getBlock().getLocation()) != null)
             return true;
         event.getPlayer().sendMessage(ChatColor.RED + "You have to place this diagonal, horizontal, or vertical from a Void Portal.");
         event.setCancelled(true);
         return false;
     }
 
-    private VoidPortal.VoidAltarLocation findPortal(Location location, @Nullable Player player) {
+    @Nullable
+    private VoidPortal.VoidPortalData findPortal(Location location) {
         for (int x = -2; x < 3; x += 2) {
             for (int z = -2; z < 3; z += 2) {
-                VoidPortal.VoidAltarLocation altarLocation = checkLocation(location, player, x, z);
-                if(altarLocation != null)
+                VoidPortal.VoidPortalData altarLocation = checkLocation(location, x, z);
+                if (altarLocation != null)
                     return altarLocation;
             }
         }
         return null;
     }
 
-    private VoidPortal.VoidAltarLocation checkLocation(Location location, Player player, int x, int z) {
-        Location newLocation = location.add(x, 0, z);
+    private VoidPortal.VoidPortalData checkLocation(Location location, int x, int z) {
+        Location newLocation = location.clone().add(x, 0, z);
         Block block = newLocation.getBlock();
         if (block.getType().equals(Material.END_PORTAL_FRAME) && BlockStorage.check(newLocation, Items.VOID_PORTAL.getItemID())) {
-            VoidPortal.VoidAltarLocation altarLocation = portal.getAltar(newLocation);
+            VoidPortal.VoidPortalData altarLocation = portal.getPortalData(newLocation);
             if (altarLocation == null) {
-                if (player != null)
-                    player.sendMessage(ChatColor.RED + "Found corrupted portal, please report this!");
-                return null;
+                altarLocation = new VoidPortal.VoidPortalData(block.getLocation());
+                portal.getAltars().add(altarLocation);
+                return altarLocation;
             }
-            altarLocation.getAltars().add(location);
+            if (!altarLocation.getAltars().contains(location))
+                altarLocation.getAltars().add(location);
             return altarLocation;
         }
         return null;
+    }
+
+    public static void storeItem(ItemStack item, Block block) {
+        YamlConfiguration configuration = new YamlConfiguration();
+        configuration.set("item", item);
+        BlockStorage.addBlockInfo(block, "dropped", configuration.saveToString());
     }
 }
