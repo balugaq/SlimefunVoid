@@ -1,7 +1,6 @@
 package software.bigbade.slimefunvoid.blocks;
 
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
-import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import lombok.SneakyThrows;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
@@ -28,6 +27,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import software.bigbade.slimefunvoid.items.Items;
+import software.bigbade.slimefunvoid.utils.RecipeItems;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -37,7 +37,9 @@ public class VoidAltar extends SlimefunItem {
     private final VoidPortal portal;
 
     public VoidAltar(Category category, VoidPortal portal) {
-        super(category, Items.VOID_ALTAR, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{});
+        super(category, Items.VOID_ALTAR, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{RecipeItems.END_STONE, RecipeItems.END_STONE, RecipeItems.END_STONE,
+                RecipeItems.END_STONE, RecipeItems.OBSIDIAN, RecipeItems.END_STONE,
+                RecipeItems.END_STONE, RecipeItems.END_STONE, RecipeItems.END_STONE});
 
         this.portal = portal;
 
@@ -83,8 +85,8 @@ public class VoidAltar extends SlimefunItem {
     @SneakyThrows
     @Nullable
     public static ItemStack getStoredItem(Block block) {
-        if (!BlockStorage.hasBlockInfo(block)) return null;
         String data = BlockStorage.getLocationInfo(block.getLocation(), "dropped");
+        if (data == null) return null;
         YamlConfiguration configuration = new YamlConfiguration();
         configuration.loadFromString(data);
         return configuration.getItemStack("item");
@@ -110,7 +112,8 @@ public class VoidAltar extends SlimefunItem {
         storeItem(stack, block);
         Item entity = block.getWorld().dropItem(block.getLocation().add(0.5, 1.2, 0.5), dropped);
         entity.setVelocity(new Vector(0, 0.1, 0));
-        SlimefunUtils.markAsNoPickup(entity, "void_altar_item");
+        entity.setPickupDelay(32767);
+        entity.setTicksLived(Integer.MAX_VALUE);
         entity.setCustomNameVisible(true);
         entity.setCustomName(nametag);
         player.playSound(block.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.3F, 0.3F);
@@ -127,7 +130,7 @@ public class VoidAltar extends SlimefunItem {
 
     private boolean onBlockBreak(BlockBreakEvent event, ItemStack item, int fortune, List<ItemStack> drops) {
         Item held = getItem(event.getBlock());
-        VoidPortal.VoidPortalData location = portal.getPortalData(event.getBlock().getLocation());
+        VoidPortal.VoidPortalData location = findPortal(event.getBlock().getLocation());
         if (held != null) {
             drops.add(new ItemStack(held.getItemStack().getType()));
             held.remove();
@@ -139,21 +142,17 @@ public class VoidAltar extends SlimefunItem {
     }
 
     private boolean onBlockPlace(BlockPlaceEvent event, ItemStack item) {
-        if (findPortal(event.getBlock().getLocation()) != null)
-            return true;
-        event.getPlayer().sendMessage(ChatColor.RED + "You have to place this diagonal, horizontal, or vertical from a Void Portal.");
-        event.setCancelled(true);
-        return false;
+        if (findPortal(event.getBlock().getLocation()) == null)
+            event.getPlayer().sendMessage(ChatColor.RED + "You have to place this diagonal, horizontal, or vertical from a Void Portal to use it in a Void Ritual.");
+        return true;
     }
 
     @Nullable
     private VoidPortal.VoidPortalData findPortal(Location location) {
-        for (int x = -2; x < 3; x += 2) {
-            for (int z = -2; z < 3; z += 2) {
-                VoidPortal.VoidPortalData altarLocation = checkLocation(location, x, z);
-                if (altarLocation != null)
-                    return altarLocation;
-            }
+        for (int i = 0; i < VoidPortal.X_OFFSETS.length; i++) {
+            VoidPortal.VoidPortalData altarLocation = checkLocation(location, VoidPortal.X_OFFSETS[i], VoidPortal.Z_OFFSETS[i]);
+            if (altarLocation != null)
+                return altarLocation;
         }
         return null;
     }

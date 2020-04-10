@@ -1,4 +1,4 @@
-package software.bigbade.slimefunvoid.menus;
+package software.bigbade.slimefunvoid.menus.research;
 
 import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
@@ -12,12 +12,12 @@ import software.bigbade.slimefunvoid.utils.VoidResearchHelper;
 import java.util.Objects;
 
 public class CategorySelectMenu extends ChestMenu {
+    private ResearchSelectMenu selectMenu = new ResearchSelectMenu();
+
     public CategorySelectMenu() {
         super(SlimefunVoid.getInstance(), "&5Select a Research");
         init();
     }
-
-    private ResearchSelectMenu selectMenu = new ResearchSelectMenu();
 
     public void init() {
         setSize(9);

@@ -11,6 +11,6 @@ public class BasicWand extends WandItem {
         super(category, Items.BASIC_WAND, VoidRecipes.VOID_ALTAR, new ItemStack[]{
                 RecipeItems.OBSIDIAN, RecipeItems.ENDER_EYE, RecipeItems.OBSIDIAN,
                 RecipeItems.ENDER_EYE, null, RecipeItems.ENDER_EYE,
-                RecipeItems.OBSIDIAN, RecipeItems.ENDER_EYE, RecipeItems.OBSIDIAN}, 100, 300);
+                RecipeItems.OBSIDIAN, RecipeItems.ENDER_EYE, RecipeItems.OBSIDIAN}, 100, 300, .3D);
     }
 }

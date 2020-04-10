@@ -1,4 +1,4 @@
-package software.bigbade.slimefunvoid.menus;
+package software.bigbade.slimefunvoid.menus.ritals;
 
 import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
 import org.bukkit.inventory.ItemStack;

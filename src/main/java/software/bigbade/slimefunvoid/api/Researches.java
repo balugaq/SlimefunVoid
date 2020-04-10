@@ -6,18 +6,21 @@ import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import org.bukkit.NamespacedKey;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.items.Items;
+import software.bigbade.slimefunvoid.utils.ResearchIDHandler;
 
 public enum Researches {
-    VOID_BENCH(new Research(new NamespacedKey(SlimefunVoid.getInstance(), "void_research_bench"), 600, "Void Research Bench", 30), Items.VOID_RESEARCH_BENCH),
-    VOID_BAG(new Research(new NamespacedKey(SlimefunVoid.getInstance(), "void_bag"), 601, "Void Bag", Integer.MAX_VALUE), Items.VOID_BAG),
-    VOID_PORTAL(new Research(new NamespacedKey(SlimefunVoid.getInstance(), "void_portal"), 602, "Void Portal", Integer.MAX_VALUE), Items.VOID_PORTAL),
-    VOID_ALTAR(new Research(new NamespacedKey(SlimefunVoid.getInstance(), "void_altar"), 603, "Void Altar", Integer.MAX_VALUE), Items.VOID_ALTAR),
-    BASIC_WAND(new Research(new NamespacedKey(SlimefunVoid.getInstance(), "basic_wand"), 604, "Basic Wand", Integer.MAX_VALUE), Items.BASIC_WAND);
+    VOID_BENCH("Void Research Bench", 30, Items.VOID_RESEARCH_BENCH),
+    VOID_BAG("Void Bag", Integer.MAX_VALUE, Items.VOID_BAG),
+    VOID_PORTAL("Void Portal", Integer.MAX_VALUE, Items.VOID_PORTAL),
+    VOID_ALTAR("Void Altar", Integer.MAX_VALUE, Items.VOID_ALTAR),
+    BASIC_WAND("Basic Wand", Integer.MAX_VALUE, Items.BASIC_WAND),
+    ADVANCED_WAND("Advanced Wand", Integer.MAX_VALUE, Items.ADVANCED_WAND),
+    FIREBALL("Fireball Spell", Integer.MAX_VALUE, Items.FIREBALL_SPELL);
 
     private Research research;
 
-    Researches(Research research, SlimefunItemStack item) {
-        this.research = research;
+    Researches(String key, int cost, SlimefunItemStack item) {
+        this.research = new Research(new NamespacedKey(SlimefunVoid.getInstance(), key.toLowerCase().replace(" ", "_")), ResearchIDHandler.nextID(), key, cost);
         Slimefun.registerResearch(research, item);
     }
 

@@ -9,7 +9,7 @@ import software.bigbade.slimefunvoid.api.VoidResearches;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResourceCategory implements IResearchCategory {
+public class ResearchCategory implements IResearchCategory {
     @Getter
     private final String name;
     @Getter
@@ -19,10 +19,13 @@ public class ResourceCategory implements IResearchCategory {
     @Getter
     private final int id;
 
-    public ResourceCategory(String name, ChatColor color, int id, VoidResearches... researches) {
+    private static int nextID = 1;
+
+    public ResearchCategory(String name, ChatColor color, VoidResearches... researches) {
         this.name = ChatColor.translateAlternateColorCodes('&', name);
         this.color = color;
-        this.id = id;
+        this.id = nextID;
+        nextID++;
         for (VoidResearches research : researches) {
             this.researches.add(research.getResearch());
         }
@@ -31,7 +34,7 @@ public class ResourceCategory implements IResearchCategory {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ResourceCategory)
+        if (obj instanceof ResearchCategory)
             return ((IResearchCategory) obj).getId() == id;
         return false;
     }

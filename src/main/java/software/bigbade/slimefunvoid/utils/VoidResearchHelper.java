@@ -6,6 +6,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.api.IResearchCategory;
+import software.bigbade.slimefunvoid.api.VoidResearches;
 
 import java.util.Objects;
 
@@ -28,19 +29,20 @@ public class VoidResearchHelper {
         }
     }
 
-    public static void addResearch(Player player, IResearchCategory category) {
+    public static void addResearch(Player player, VoidResearches researches) {
         PersistentDataContainer data = player.getPersistentDataContainer();
         if (data.has(RESEARCHED, PersistentDataType.INTEGER_ARRAY)) {
             int[] researchData = data.get(RESEARCHED, PersistentDataType.INTEGER_ARRAY);
             Objects.requireNonNull(researchData);
-            if (researchData.length - 1 >= category.getId())
-                researchData[category.getId()] += 1;
-            else {
+            if (researchData.length >= researches.getCategoryID()) {
+                researchData[researches.getCategoryID()-1] += 1;
+            } else {
                 int[] newData = new int[researchData.length];
                 System.arraycopy(researchData, 0, newData, 0, researchData.length - 1);
                 newData[researchData.length - 1] = 1;
-                data.set(RESEARCHED, PersistentDataType.INTEGER_ARRAY, newData);
+                researchData = newData;
             }
+            data.set(RESEARCHED, PersistentDataType.INTEGER_ARRAY, researchData);
         } else {
             data.set(RESEARCHED, PersistentDataType.INTEGER_ARRAY, new int[]{1});
         }

@@ -2,16 +2,17 @@ package software.bigbade.slimefunvoid;
 
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.bstats.bukkit.Metrics;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
+import software.bigbade.slimefunvoid.commands.ResearchCmd;
+import software.bigbade.slimefunvoid.commands.ResearchTabCompleter;
 import software.bigbade.slimefunvoid.utils.ItemManager;
 import software.bigbade.slimefunvoid.utils.ListenerManager;
 
-import java.util.logging.Logger;
+import java.util.Objects;
 
 public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
 
@@ -22,10 +23,12 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
         setInstance(this);
 
         new Metrics(this, 6993);
-        Config cfg = new Config(this);
 
         Category category = new Category(new NamespacedKey(this, "slimevoid_category"), new CustomItem(Material.OBSIDIAN, "&5SlimeVoid"));
         category.register();
+
+        Objects.requireNonNull(getCommand("svresearch")).setExecutor(new ResearchCmd());
+        Objects.requireNonNull(getCommand("svresearch")).setTabCompleter(new ResearchTabCompleter());
 
         new ItemManager(category).registerItems();
 
@@ -47,8 +50,4 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
     }
 
     public static SlimefunVoid getInstance() { return instance; }
-
-    public static Logger getPluginLogger() {
-        return instance.getLogger();
-    }
 }

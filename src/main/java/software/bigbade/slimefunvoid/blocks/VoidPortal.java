@@ -26,7 +26,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.items.Items;
-import software.bigbade.slimefunvoid.menus.RitualMenu;
+import software.bigbade.slimefunvoid.menus.ritals.RitualMenu;
 import software.bigbade.slimefunvoid.menus.VoidMenu;
 import software.bigbade.slimefunvoid.utils.RecipeItems;
 
@@ -41,14 +41,18 @@ public class VoidPortal extends SlimefunItem {
 
     private VoidMenu voidMenu = new VoidMenu();
 
-    private RitualMenu ritualMenu = new RitualMenu(this);
+    private RitualMenu ritualMenu = new RitualMenu();
 
     @Getter
     private List<VoidPortalData> altars = new ArrayList<>();
 
+    protected static final int[] X_OFFSETS = new int[]{-2, 0, 2, 3, 2, 0, -2, -3};
+    protected static final int[] Z_OFFSETS = new int[]{2, 3, 2, 0, -2, -3, -2, 0};
+
     public VoidPortal(Category category) {
-        super(category, Items.VOID_PORTAL, RecipeType.ANCIENT_ALTAR, new ItemStack[]{Items.VOID_ALTAR, RecipeItems.ENCHANTING_TABLE, Items.VOID_ALTAR,
-                RecipeItems.ENDER_EYE, RecipeItems.ENDER_EYE,
+        super(category, Items.VOID_PORTAL, RecipeType.ANCIENT_ALTAR, new ItemStack[]{
+                Items.VOID_ALTAR, RecipeItems.END_CRYSTAL, Items.VOID_ALTAR,
+                RecipeItems.ENDER_EYE, Items.VOID_RESEARCH_BENCH, RecipeItems.ENDER_EYE,
                 RecipeItems.OBSIDIAN, Items.VOID_ALTAR, RecipeItems.OBSIDIAN});
 
         initMenu();
@@ -75,7 +79,7 @@ public class VoidPortal extends SlimefunItem {
             if (data.has(VoidMenu.VOID_COOLDOWN, PersistentDataType.LONG)) {
                 Long start = data.get(VoidMenu.VOID_COOLDOWN, PersistentDataType.LONG);
                 Objects.requireNonNull(start);
-                long cooldown = getCooldownTime(start);
+                long cooldown = getCooldownTime(start, 300);
                 if (cooldown < 0)
                     voidMenu.open(player);
                 else
@@ -103,20 +107,20 @@ public class VoidPortal extends SlimefunItem {
         if (data.has(VoidMenu.VOID_COOLDOWN, PersistentDataType.LONG)) {
             Long start = data.get(VoidMenu.VOID_COOLDOWN, PersistentDataType.LONG);
             Objects.requireNonNull(start);
-            long cooldown = getCooldownTime(start);
+            long cooldown = getCooldownTime(start, 300);
             if (cooldown > 0) {
                 menu.replaceExistingItem(12, new CustomItem(Material.END_PORTAL_FRAME, ChatColor.GREEN + "Enter The Void " + ChatColor.WHITE + "(" + cooldown + "s)"));
             }
         }
     }
 
-    private long getCooldownTime(long start) {
-        return 300 - (System.currentTimeMillis() - start) / 1000;
+    public static long getCooldownTime(long start, long cooldown) {
+        return cooldown - (System.currentTimeMillis() - start) / 1000;
     }
 
     private void onBlockUse(PlayerRightClickEvent event) {
         Block block = VoidAltar.prepareMenuOpen(event);
-        if(block == null)
+        if (block == null)
             return;
         String owner = BlockStorage.getLocationInfo(block.getLocation(), "owner");
         if (getPortalData(block.getLocation()) == null)
@@ -134,10 +138,10 @@ public class VoidPortal extends SlimefunItem {
 
     private boolean onBlockBreak(BlockBreakEvent event, ItemStack item, int fortune, List<ItemStack> drops) {
         VoidPortalData data = getPortalData(event.getBlock().getLocation());
-        if(data==null) {
+        if (data == null) {
             return true;
         }
-        if(data.getAltars().size() > 0) {
+        if (data.getAltars().size() > 0) {
             event.getPlayer().sendMessage(ChatColor.RED + "You must break all altars before you break the portal.");
             event.setCancelled(true);
             return false;
@@ -145,14 +149,12 @@ public class VoidPortal extends SlimefunItem {
         return true;
     }
 
-    public static void checkAltars(VoidPortalData data, Location location) {
-        for (int x = -2; x < 3; x += 2) {
-            for (int z = -2; z < 3; z += 2) {
-                Location newLocation = location.clone().add(x, 0, z);
-                Block block = newLocation.getBlock();
-                if (block.getType().equals(Material.END_STONE_BRICKS) && BlockStorage.check(newLocation, Items.VOID_ALTAR.getItemID()) && !data.getAltars().contains(newLocation)) {
-                    data.getAltars().add(newLocation);
-                }
+    public static void checkAltars(VoidPortalData data) {
+        for (int i = 0; i < X_OFFSETS.length; i++) {
+            Location newLocation = data.getPortal().clone().add(X_OFFSETS[i], 0, Z_OFFSETS[i]);
+            Block block = newLocation.getBlock();
+            if (block.getType().equals(Material.END_STONE_BRICKS) && BlockStorage.check(newLocation, Items.VOID_ALTAR.getItemID()) && !data.getAltars().contains(newLocation)) {
+                data.getAltars().add(newLocation);
             }
         }
     }
@@ -174,6 +176,7 @@ public class VoidPortal extends SlimefunItem {
 
         @Getter
         private List<Location> altars = new ArrayList<>();
+
         @Getter
         private final Location portal;
     }

@@ -1,11 +1,11 @@
-package software.bigbade.slimefunvoid.menus;
+package software.bigbade.slimefunvoid.menus.ritals;
 
 import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.api.VoidRecipes;
-import software.bigbade.slimefunvoid.blocks.VoidResearchBench;
+import software.bigbade.slimefunvoid.menus.research.ResearchBenchMenu;
 
 public class IndividualRitualMenu extends ChestMenu {
     private static final int[] GLASS_SLOTS = new int[] { 1, 2, 3, 9, 11, 18, 19, 20, 13, 7, 8, 9, 15, 17, 24, 25, 26 };
@@ -13,7 +13,7 @@ public class IndividualRitualMenu extends ChestMenu {
     public IndividualRitualMenu() {
         super(SlimefunVoid.getInstance(), "&5Void Rituals");
         for(int slot : GLASS_SLOTS) {
-            addItem(slot, VoidResearchBench.GREY_GLASS, (player, clickSlot, item, cursor, action) -> false);
+            addItem(slot, ResearchBenchMenu.GREY_GLASS, (player, clickSlot, item, cursor, action) -> false);
         }
         setPlayerInventoryClickable(false);
     }

@@ -46,6 +46,8 @@ public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> {
                 openBag(data, event.getPlayer());
             } else if (event.getPlayer().isSneaking()) {
                 setTargetBlock(data, event.getPlayer());
+            } else {
+                event.getPlayer().sendMessage(ChatColor.RED + "You must bind the Void Bag to a chest!");
             }
             event.getItem().setItemMeta(meta);
         };

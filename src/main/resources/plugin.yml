@@ -5,3 +5,11 @@ api-version: 1.13
 main: software.bigbade.slimefunvoid.SlimefunVoid
 depend:
   - Slimefun
+commands:
+  svresearch:
+    description: Allows the unlocking/resetting of void researches
+    usage: /svresearch (add/remove) (player) (research)
+permissions:
+  slimevoid.research:
+    description: Allows usage of the /svresearch command
+    default: false

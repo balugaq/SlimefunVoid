@@ -1,4 +1,4 @@
-package software.bigbade.slimefunvoid.menus;
+package software.bigbade.slimefunvoid.menus.research;
 
 import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
@@ -10,12 +10,9 @@ import org.bukkit.persistence.PersistentDataType;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.api.IResearchCategory;
 import software.bigbade.slimefunvoid.api.IVoidResearch;
-import software.bigbade.slimefunvoid.blocks.VoidResearchBench;
 import software.bigbade.slimefunvoid.utils.VoidResearchHelper;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ResearchSelectMenu extends ChestMenu {
     public ResearchSelectMenu() {
@@ -28,10 +25,10 @@ public class ResearchSelectMenu extends ChestMenu {
         for(int i = 0; i < category.getResearches().size(); i++) {
             addMenuClickHandler(i, (player, slot, item, cursor, action) -> {
                 PersistentDataContainer data = player.getPersistentDataContainer();
-                if(!data.has(VoidResearchBench.RESEARCH_KEY, PersistentDataType.STRING)) {
+                if(!data.has(ResearchBenchMenu.RESEARCH_KEY, PersistentDataType.STRING)) {
                     addResearch(slot, category, player);
                 } else {
-                    player.sendMessage(ChatColor.RED + "You are already researching " + data.get(VoidResearchBench.RESEARCH_KEY, PersistentDataType.STRING));
+                    player.sendMessage(ChatColor.RED + "You are already researching " + data.get(ResearchBenchMenu.RESEARCH_KEY, PersistentDataType.STRING));
                 }
                 return false;
             });
@@ -45,8 +42,7 @@ public class ResearchSelectMenu extends ChestMenu {
         for (int i = 0; i < category.getResearches().size(); i++) {
             IVoidResearch research = category.getResearches().get(i);
             if (researched < i) {
-                List<String> magicLore = research.getLore().stream().map(line -> ChatColor.MAGIC + category.getColor().toString() + ChatColor.stripColor(line)).collect(Collectors.toList());
-                replaceExistingItem(i, new CustomItem(Material.PAPER, category.getColor().toString() + ChatColor.MAGIC + ChatColor.stripColor(research.getName()), magicLore));
+                replaceExistingItem(i, new CustomItem(Material.PAPER, ChatColor.RED + ChatColor.stripColor(research.getName())));
                 continue;
             }
             replaceExistingItem(i, new CustomItem(Material.PAPER, category.getColor() + research.getName(), research.getLore()));
@@ -58,8 +54,8 @@ public class ResearchSelectMenu extends ChestMenu {
         IVoidResearch research = category.getResearches().get(slot);
         int found = VoidResearchHelper.getResearched(player, category);
         if (found == slot) {
-            data.set(VoidResearchBench.RESEARCH_KEY, PersistentDataType.STRING, research.getName());
-            data.set(VoidResearchBench.RESEARCH_START, PersistentDataType.LONG, System.currentTimeMillis());
+            data.set(ResearchBenchMenu.RESEARCH_KEY, PersistentDataType.STRING, research.getName());
+            data.set(ResearchBenchMenu.RESEARCH_START, PersistentDataType.LONG, System.currentTimeMillis());
             player.sendMessage(ChatColor.GREEN + "Researching " + research.getName());
             player.closeInventory();
         } else if (found > slot) {
