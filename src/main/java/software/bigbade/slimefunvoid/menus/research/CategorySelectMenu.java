@@ -5,8 +5,8 @@ import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import software.bigbade.slimefunvoid.SlimefunVoid;
-import software.bigbade.slimefunvoid.api.IResearchCategory;
-import software.bigbade.slimefunvoid.api.VoidCategories;
+import software.bigbade.slimefunvoid.api.research.IResearchCategory;
+import software.bigbade.slimefunvoid.api.research.VoidCategories;
 import software.bigbade.slimefunvoid.utils.VoidResearchHelper;
 
 import java.util.Objects;

@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.api.Elements;
-import software.bigbade.slimefunvoid.api.VoidRecipes;
+import software.bigbade.slimefunvoid.api.research.VoidRecipes;
 import software.bigbade.slimefunvoid.blocks.VoidAltar;
 import software.bigbade.slimefunvoid.blocks.VoidPortal;
 import software.bigbade.slimefunvoid.items.wands.WandItem;

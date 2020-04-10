@@ -3,7 +3,7 @@ package software.bigbade.slimefunvoid.impl;
 import lombok.Getter;
 import me.mrCookieSlime.Slimefun.Objects.Research;
 import org.bukkit.ChatColor;
-import software.bigbade.slimefunvoid.api.IVoidResearch;
+import software.bigbade.slimefunvoid.api.research.IVoidResearch;
 
 import java.util.Arrays;
 import java.util.List;

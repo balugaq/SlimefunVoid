@@ -3,7 +3,7 @@ package software.bigbade.slimefunvoid.menus.ritals;
 import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
 import org.bukkit.inventory.ItemStack;
 import software.bigbade.slimefunvoid.SlimefunVoid;
-import software.bigbade.slimefunvoid.api.VoidRecipes;
+import software.bigbade.slimefunvoid.api.research.VoidRecipes;
 
 public class RitualRecipeMenu extends ChestMenu {
     private IndividualRitualMenu ritualMenu = new IndividualRitualMenu();

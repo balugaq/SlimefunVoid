@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import software.bigbade.slimefunvoid.SlimefunVoid;
-import software.bigbade.slimefunvoid.api.IResearchCategory;
-import software.bigbade.slimefunvoid.api.IVoidResearch;
+import software.bigbade.slimefunvoid.api.research.IResearchCategory;
+import software.bigbade.slimefunvoid.api.research.IVoidResearch;
 import software.bigbade.slimefunvoid.utils.VoidResearchHelper;
 
 import javax.annotation.Nonnull;

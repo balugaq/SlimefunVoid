@@ -2,9 +2,9 @@ package software.bigbade.slimefunvoid.impl;
 
 import lombok.Getter;
 import org.bukkit.ChatColor;
-import software.bigbade.slimefunvoid.api.IResearchCategory;
-import software.bigbade.slimefunvoid.api.IVoidResearch;
-import software.bigbade.slimefunvoid.api.VoidResearches;
+import software.bigbade.slimefunvoid.api.research.IResearchCategory;
+import software.bigbade.slimefunvoid.api.research.IVoidResearch;
+import software.bigbade.slimefunvoid.api.research.VoidResearches;
 
 import java.util.ArrayList;
 import java.util.List;

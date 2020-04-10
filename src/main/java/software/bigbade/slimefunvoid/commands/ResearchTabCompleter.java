@@ -6,7 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import software.bigbade.slimefunvoid.api.VoidResearches;
+import software.bigbade.slimefunvoid.api.research.VoidResearches;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

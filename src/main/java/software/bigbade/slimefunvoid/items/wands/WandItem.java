@@ -181,6 +181,7 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
         AtomicInteger id = new AtomicInteger();
         final long cooldown = spell.getCooldown(wand);
         cooldowns.put(player, (double) cooldown);
+        player.setCooldown(wand.getType(), (int) cooldown);
         id.set(Bukkit.getScheduler().scheduleSyncRepeatingTask(SlimefunVoid.getInstance(), () -> {
             Double left = cooldowns.get(player);
             if(left == null) {

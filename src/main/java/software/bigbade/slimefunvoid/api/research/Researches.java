@@ -1,4 +1,4 @@
-package software.bigbade.slimefunvoid.api;
+package software.bigbade.slimefunvoid.api.research;
 
 import me.mrCookieSlime.Slimefun.Objects.Research;
 import me.mrCookieSlime.Slimefun.api.Slimefun;

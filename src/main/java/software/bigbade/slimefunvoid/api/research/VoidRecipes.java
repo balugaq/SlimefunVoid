@@ -1,4 +1,4 @@
-package software.bigbade.slimefunvoid.api;
+package software.bigbade.slimefunvoid.api.research;
 
 import lombok.Getter;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;

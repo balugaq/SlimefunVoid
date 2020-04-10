@@ -1,4 +1,4 @@
-package software.bigbade.slimefunvoid.api;
+package software.bigbade.slimefunvoid.api.research;
 
 import software.bigbade.slimefunvoid.impl.VoidResearch;
 

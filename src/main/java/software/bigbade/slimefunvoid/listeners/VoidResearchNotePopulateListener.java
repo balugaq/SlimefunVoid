@@ -17,15 +17,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import software.bigbade.slimefunvoid.api.IVoidResearch;
-import software.bigbade.slimefunvoid.api.VoidCategories;
+import software.bigbade.slimefunvoid.api.research.IVoidResearch;
+import software.bigbade.slimefunvoid.api.research.VoidCategories;
 import software.bigbade.slimefunvoid.utils.VoidResearchHelper;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Random;
 
-public class VoidResearchPopulateListener implements Listener {
+public class VoidResearchNotePopulateListener implements Listener {
     private Random random = new Random();
 
     private static final EntityType[] DROPABLE = new EntityType[]{EntityType.IRON_GOLEM, EntityType.ENDERMAN, EntityType.VILLAGER, EntityType.ZOMBIE_VILLAGER, EntityType.EVOKER, EntityType.WITCH, EntityType.ILLUSIONER, EntityType.PILLAGER, EntityType.VINDICATOR};

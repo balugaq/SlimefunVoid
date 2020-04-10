@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import software.bigbade.slimefunvoid.api.Elements;
-import software.bigbade.slimefunvoid.api.Researches;
+import software.bigbade.slimefunvoid.api.research.Researches;
 import software.bigbade.slimefunvoid.impl.BasicSpell;
 
 public class FireballSpell extends BasicSpell {

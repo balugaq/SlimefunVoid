@@ -1,6 +1,7 @@
 package software.bigbade.slimefunvoid;
 
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
+import lombok.Getter;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.bstats.bukkit.Metrics;
@@ -18,6 +19,9 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
 
     private static SlimefunVoid instance;
 
+    @Getter
+    private ItemManager itemManager;
+
     @Override
     public void onEnable() {
         setInstance(this);
@@ -30,9 +34,10 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
         Objects.requireNonNull(getCommand("svresearch")).setExecutor(new ResearchCmd());
         Objects.requireNonNull(getCommand("svresearch")).setTabCompleter(new ResearchTabCompleter());
 
-        new ItemManager(category).registerItems();
+        itemManager = new ItemManager(category);
+        itemManager.registerItems();
 
-        new ListenerManager().registerListeners();
+        new ListenerManager(this).registerListeners();
     }
 
     private static void setInstance(SlimefunVoid instance) {

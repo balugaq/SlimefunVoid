@@ -4,7 +4,7 @@ import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import software.bigbade.slimefunvoid.SlimefunVoid;
-import software.bigbade.slimefunvoid.api.VoidRecipes;
+import software.bigbade.slimefunvoid.api.research.VoidRecipes;
 import software.bigbade.slimefunvoid.menus.research.ResearchBenchMenu;
 
 public class IndividualRitualMenu extends ChestMenu {
