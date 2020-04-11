@@ -16,7 +16,7 @@ public class FireballSpell extends BasicSpell {
     }
 
     @Override
-    public void onCast(Player player, ItemStack wand) {
+    public boolean onCast(Player player, ItemStack wand) {
         Fireball fireball = (Fireball) player.getWorld().spawnEntity(player.getEyeLocation(), EntityType.FIREBALL);
         Vector direction = player.getEyeLocation().getDirection().normalize();
         fireball.setVelocity(direction);
@@ -24,6 +24,7 @@ public class FireballSpell extends BasicSpell {
         fireball.setIsIncendiary(true);
         fireball.setShooter(player);
         fireball.setYield(getMultipliedDamage(wand, 1f, Elements.VOID));
+        return true;
     }
 
     @Override

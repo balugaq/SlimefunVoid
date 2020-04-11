@@ -1,5 +1,6 @@
 package software.bigbade.slimefunvoid.items;
 
+import lombok.Getter;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
@@ -23,10 +24,18 @@ import org.bukkit.persistence.PersistentDataType;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.utils.RecipeItems;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> {
     public static final NamespacedKey BAG_LOCATION = new NamespacedKey(SlimefunVoid.getInstance(), "bagLocation");
+
+    @Getter
+    private final Set<UUID> openBags = new HashSet<>();
 
     public VoidBag(Category category) {
         super(category, Items.VOID_BAG, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{RecipeItems.OBSIDIAN, RecipeItems.ENDER_EYE, RecipeItems.OBSIDIAN,
@@ -71,10 +80,8 @@ public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> {
         Block block = deserializeBlock(stringLocation);
         if (block.getType().equals(Material.CHEST)) {
             Inventory chest = ((Chest) block.getState()).getBlockInventory();
-            Inventory newInventory = Bukkit.createInventory(null, chest.getSize(), ChatColor.DARK_PURPLE + "Void Bag");
-            for (int i = 0; i < chest.getSize(); i++)
-                newInventory.setItem(i, chest.getItem(i));
-            player.openInventory(newInventory);
+            openBags.add(player.getUniqueId());
+            player.openInventory(chest);
         } else {
             data.remove(BAG_LOCATION);
             player.sendMessage(ChatColor.RED + "Invalid bag location! Target chest might of been broken.");

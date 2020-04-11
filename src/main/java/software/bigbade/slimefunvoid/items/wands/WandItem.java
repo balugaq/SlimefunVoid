@@ -52,11 +52,21 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
 
     private static final int BAR_LENGTH = 40;
 
+    private final boolean useCooldown;
+
     public WandItem(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, int maxElement, int maxElements, double baseBackfireChance) {
         super(category, item, recipeType, recipe);
         this.maxElement = maxElement;
         this.maxElements = maxElements;
         this.baseBackfireChance = baseBackfireChance;
+        boolean spigot;
+        try {
+            Class.forName("");
+            spigot = true;
+        } catch (ClassNotFoundException e) {
+            spigot = false;
+        }
+        useCooldown = spigot;
     }
 
     @Nullable
@@ -178,10 +188,24 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
     }
 
     private void cooldown(Player player, ItemStack wand, WandSpell spell) {
-        AtomicInteger id = new AtomicInteger();
         final long cooldown = spell.getCooldown(wand);
         cooldowns.put(player, (double) cooldown);
         player.setCooldown(wand.getType(), (int) cooldown);
+        if (useCooldown) {
+            addActionBarRunnable(player, spell, cooldown);
+        } else {
+            AtomicInteger id = new AtomicInteger();
+            id.set(Bukkit.getScheduler().scheduleSyncDelayedTask(SlimefunVoid.getInstance(), () -> {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(""));
+                Bukkit.getScheduler().cancelTask(id.get());
+                spell.onStop(player, wand);
+            }, cooldown * 20));
+        }
+    }
+
+    private void addActionBarRunnable(Player player, WandSpell spell, long cooldown) {
+        ItemStack wand = player.getInventory().getItemInMainHand();
+        AtomicInteger id = new AtomicInteger();
         id.set(Bukkit.getScheduler().scheduleSyncRepeatingTask(SlimefunVoid.getInstance(), () -> {
             Double left = cooldowns.get(player);
             if (left == null) {

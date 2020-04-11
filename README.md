@@ -1,2 +1,47 @@
 # SlimefunVoid
-Tap into the void in Slimefun, but be careful.
+
+# Features
+- Void Research Table
+  - Allows for unlocking researches over time instead of using levels.
+- Research Notes
+  - Found in the world or from killing various mobs
+  - Instantly unlocks research
+- Items
+  - Void Bag
+    - Can be linked to a chest
+    - Items put in the bag are automatically sent to the chest
+    - The Void consumes some items put into it
+  - Wands
+    - Crafted at Void Portal
+    - Can cast spells
+    - Can be infused with different items to power up spells
+      - Each element has its strengths and weaknesses
+- Void Portal
+  - Allows for entering the void
+    - Random text-based outcomes, giving benefits or punishments
+  - Used for Void Rituals
+    - Used to craft items, or infuse wands
+- Spells
+  - Selected by shift right clicking a wand
+  - Has a chance to cast the spell or backfire
+    - Cast spells can be improved by getting better wands
+    - Also can be improved by infusing the wand
+  - Backfiring
+    - Low chance spells backfire on cast
+    - Spells with dangerous backfires are marked
+    - Backfires do the opposite of the intent
+      - Ex: Light Bending spell backfire makes you glowing not invisible.
+  - Current Spells
+    - Fireball
+    - Teleport
+    - Light Bending (Invisibility)
+    
+- Planned features
+  - Void quarry
+    - Automatically breaks blocks in the area
+    - Void consumes some items put in it
+  - Specialization
+    - Player chooses an element to "specialize" in
+    - Player can change specialization at any time
+    - Allows special researches for that element
+    - Gives more spells, special armor set, and boss (?)

@@ -37,7 +37,7 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
         itemManager = new ItemManager(category);
         itemManager.registerItems();
 
-        new ListenerManager().registerListeners();
+        new ListenerManager(this).registerListeners();
     }
 
     private static void setInstance(SlimefunVoid instance) {
