@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+@RequiredArgsConstructor
 public class PlacedVoidQuarry {
     @Getter
     @Setter
@@ -29,6 +31,9 @@ public class PlacedVoidQuarry {
     @Setter
     @Nullable
     private Location chest;
+
+    @Getter
+    private final Location quarry;
 
     @Override
     public boolean equals(Object obj) {

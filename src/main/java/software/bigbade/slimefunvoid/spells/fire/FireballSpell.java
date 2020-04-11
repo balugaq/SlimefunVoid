@@ -1,7 +1,5 @@
-package software.bigbade.slimefunvoid.spells;
+package software.bigbade.slimefunvoid.spells.fire;
 
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
@@ -10,10 +8,11 @@ import org.bukkit.util.Vector;
 import software.bigbade.slimefunvoid.api.Elements;
 import software.bigbade.slimefunvoid.api.research.Researches;
 import software.bigbade.slimefunvoid.impl.BasicSpell;
+import software.bigbade.slimefunvoid.items.Items;
 
 public class FireballSpell extends BasicSpell {
     public FireballSpell() {
-        super(Researches.FIREBALL.getResearch(), Elements.FIRE, new CustomItem(Material.FIRE_CHARGE, Elements.FIRE.getColor() + "Fireball"), 2);
+        super(Researches.FIREBALL.getResearch(), Elements.FIRE, Items.FIREBALL_SPELL, 2);
     }
 
     @Override

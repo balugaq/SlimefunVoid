@@ -148,7 +148,7 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
     private double getElementChance(Elements elements) {
         float element = getElementAmount(item, elements);
         if (element != 0)
-            return 1+(maxElement / element);
+            return 1 + (maxElement / element);
         return 1;
     }
 
@@ -170,7 +170,7 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
             if (event.getHand() != EquipmentSlot.HAND)
                 return;
             if (player.isSneaking()) {
-                menu.open(player, item);
+                menu.open(player);
             } else {
                 onSpellCast(item, player);
             }
@@ -184,9 +184,10 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
         player.setCooldown(wand.getType(), (int) cooldown);
         id.set(Bukkit.getScheduler().scheduleSyncRepeatingTask(SlimefunVoid.getInstance(), () -> {
             Double left = cooldowns.get(player);
-            if(left == null) {
+            if (left == null) {
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(""));
                 Bukkit.getScheduler().cancelTask(id.get());
+                spell.onStop(player, wand);
                 return;
             }
             if (left <= 0) {
@@ -200,16 +201,16 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
     private String getCooldownBar(double remaining, float start) {
         StringBuilder cooldownBar = new StringBuilder(ChatColor.GOLD + "[");
         int currentPosition;
-        if(remaining > 0) {
-            currentPosition = (int) (BAR_LENGTH * (start - remaining)/start);
-        }  else {
+        if (remaining > 0) {
+            currentPosition = (int) (BAR_LENGTH * (start - remaining) / start);
+        } else {
             currentPosition = BAR_LENGTH;
         }
         if (currentPosition > 0)
             cooldownBar.append(ChatColor.GREEN);
         cooldownBar.append(Strings.repeat(":", currentPosition));
         cooldownBar.append(ChatColor.RED);
-        cooldownBar.append(Strings.repeat(":", BAR_LENGTH-currentPosition));
+        cooldownBar.append(Strings.repeat(":", BAR_LENGTH - currentPosition));
         cooldownBar.append(ChatColor.GOLD).append("]");
         return cooldownBar.toString();
     }
@@ -229,11 +230,11 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
         if (wand == null)
             return;
         if (!cooldowns.containsKey(player)) {
-            cooldown(player, item, wandSpell);
             if (backfires(wand)) {
                 wandSpell.onBackfire(player, item);
             } else {
-                wandSpell.onCast(player, item);
+                if (wandSpell.onCast(player, item))
+                    cooldown(player, item, wandSpell);
             }
         }
     }

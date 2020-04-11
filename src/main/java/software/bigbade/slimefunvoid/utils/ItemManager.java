@@ -25,7 +25,7 @@ public class ItemManager {
         portal.register(SlimefunVoid.getInstance());
         new VoidAltar(category, portal).register(SlimefunVoid.getInstance());
         new BasicWand(category).register(SlimefunVoid.getInstance());
-        quarry = new VoidQuarry(category);
-        quarry.register(SlimefunVoid.getInstance());
+        //quarry = new VoidQuarry(category);
+        //quarry.register(SlimefunVoid.getInstance());
     }
 }

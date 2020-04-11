@@ -5,9 +5,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public interface WandSpell {
-    void onCast(Player player, ItemStack wand);
+    boolean onCast(Player player, ItemStack wand);
 
     void onBackfire(Player player, ItemStack wand);
+
+    void onStop(Player player, ItemStack wand);
 
     Research getResearch();
 

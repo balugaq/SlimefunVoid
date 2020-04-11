@@ -53,8 +53,6 @@ public class VoidMenu extends ChestMenu {
         }
         for(int i = 0; i < 3; i++) {
             addItem(11+(i*2), new CustomItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + options[i]), (clicker, slot, item, cursor, action) -> {
-                consumers.get((slot-11)/2).accept(clicker);
-                player.closeInventory();
                 PersistentDataContainer data = player.getPersistentDataContainer();
                 data.set(VOID_COOLDOWN, PersistentDataType.LONG, System.currentTimeMillis());
                 if(data.has(VOID_JOURNEYS, PersistentDataType.LONG)) {
@@ -62,6 +60,8 @@ public class VoidMenu extends ChestMenu {
                 } else {
                     data.set(VOID_JOURNEYS, PersistentDataType.LONG, 1L);
                 }
+                consumers.get((slot-11)/2).accept(clicker);
+                player.closeInventory();
                 return false;
             });
         }

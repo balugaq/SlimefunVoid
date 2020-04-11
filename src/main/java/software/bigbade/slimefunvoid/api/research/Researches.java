@@ -15,9 +15,11 @@ public enum Researches {
     VOID_ALTAR("Void Altar", Integer.MAX_VALUE, Items.VOID_ALTAR),
     BASIC_WAND("Basic Wand", Integer.MAX_VALUE, Items.BASIC_WAND),
     ADVANCED_WAND("Advanced Wand", Integer.MAX_VALUE, Items.ADVANCED_WAND),
-    FIREBALL("Fireball Spell", Integer.MAX_VALUE, Items.FIREBALL_SPELL);
+    FIREBALL("Fireball Spell", Integer.MAX_VALUE, Items.FIREBALL_SPELL),
+    LIGHT_BENDING("Light Bending Spell", Integer.MAX_VALUE, Items.LIGHT_BENDING_SPELL),
+    TELEPORT("Teleport Spell", Integer.MAX_VALUE, Items.TELEPORT_SPELL);
 
-    private Research research;
+    private final Research research;
 
     Researches(String key, int cost, SlimefunItemStack item) {
         this.research = new Research(new NamespacedKey(SlimefunVoid.getInstance(), key.toLowerCase().replace(" ", "_")), ResearchIDHandler.nextID(), key, cost);

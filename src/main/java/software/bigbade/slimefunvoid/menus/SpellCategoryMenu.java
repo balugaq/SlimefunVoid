@@ -1,8 +1,6 @@
 package software.bigbade.slimefunvoid.menus;
 
 import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.api.Elements;
@@ -25,15 +23,6 @@ public class SpellCategoryMenu extends ChestMenu {
         for (int i = 0; i < Elements.values().length; i++) {
             addItem(i+1, Elements.values()[i].getIcon(), (player, slot, item, cursor, action) -> false);
         }
-        setSize(54);
-    }
-
-    public void open(Player player, ItemStack wand) {
-        initMenu(wand);
-        super.open(player);
-    }
-
-    private void initMenu(ItemStack wand) {
         for (Spells spells : Spells.values()) {
             WandSpell spell = spells.getSpell();
             int slot = spell.getElement().ordinal()+10;
@@ -43,13 +32,14 @@ public class SpellCategoryMenu extends ChestMenu {
             if(slot > 54)
                 continue;
             addItem(slot, spell.getIcon(), (player, clickedSlot, item, cursor, action) -> {
-                ItemMeta wandMeta = wand.getItemMeta();
+                ItemMeta wandMeta = player.getInventory().getItemInMainHand().getItemMeta();
                 Objects.requireNonNull(wandMeta);
                 wandMeta.setDisplayName(WandItem.removeSpellFromName(wandMeta.getDisplayName()) + spell.getElement().getColor() + " (" + spell.getName() + ")");
-                wand.setItemMeta(wandMeta);
+                player.getInventory().getItemInMainHand().setItemMeta(wandMeta);
                 player.closeInventory();
                 return false;
             });
         }
+        setSize(54);
     }
 }

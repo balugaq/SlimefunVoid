@@ -3,6 +3,7 @@ package software.bigbade.slimefunvoid.impl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.mrCookieSlime.Slimefun.Objects.Research;
+import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import software.bigbade.slimefunvoid.api.Elements;
@@ -18,18 +19,30 @@ public class BasicSpell implements WandSpell {
     @Getter
     private final Elements element;
     @Getter
-    private final ItemStack icon;
+    private final SlimefunItemStack icon;
 
     private final long baseCooldown;
 
     @Override
-    public void onCast(Player player, ItemStack wand) {
+    public boolean onCast(Player player, ItemStack wand) {
         //Overridden by subclass
+        return false;
     }
 
     @Override
     public void onBackfire(Player player, ItemStack wand) {
         //Overridden by subclass
+    }
+
+    @Override
+    public void onStop(Player player, ItemStack wand) {
+        //Overridden by subclass
+    }
+
+    @Override
+    public String getName() {
+        Objects.requireNonNull(icon.getItemMeta());
+        return icon.getItemMeta().getDisplayName();
     }
 
     public static float getMultiplier(ItemStack item, Elements element) {
@@ -76,11 +89,6 @@ public class BasicSpell implements WandSpell {
             base *= getMultiplier(item, Elements.VOID);
         }
         return base;
-    }
-
-    @Override
-    public String getName() {
-        return Objects.requireNonNull(icon.getItemMeta()).getDisplayName();
     }
 
     public long getCooldown(ItemStack item) {
