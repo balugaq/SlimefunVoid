@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class TeleportSpell extends BasicSpell {
     public TeleportSpell() {
-        super(Researches.TELEPORT.getResearch(), Elements.VOID, Items.TELEPORT_SPELL, 5);
+        super(Researches.TELEPORT_SPELL.getResearch(), Elements.VOID, Items.TELEPORT_SPELL, 5);
     }
 
     @Override
@@ -38,6 +38,10 @@ public class TeleportSpell extends BasicSpell {
 
     @Override
     public void onBackfire(Player player, ItemStack wand) {
+        randomTeleport(player, wand);
+    }
+
+    public static void randomTeleport(Player player, ItemStack wand) {
         Location location = player.getLocation().clone();
         double distance = getMultipliedDamage(wand, 5, Elements.VOID);
         double half = distance/2;

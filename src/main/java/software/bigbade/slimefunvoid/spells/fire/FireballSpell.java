@@ -12,7 +12,7 @@ import software.bigbade.slimefunvoid.items.Items;
 
 public class FireballSpell extends BasicSpell {
     public FireballSpell() {
-        super(Researches.FIREBALL.getResearch(), Elements.FIRE, Items.FIREBALL_SPELL, 2);
+        super(Researches.FIREBALL_SPELL.getResearch(), Elements.FIRE, Items.FIREBALL_SPELL, 2);
     }
 
     @Override

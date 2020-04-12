@@ -28,7 +28,7 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
 
         new Metrics(this, 6993);
 
-        Category category = new Category(new NamespacedKey(this, "slimevoid_category"), new CustomItem(Material.OBSIDIAN, "&5SlimeVoid"));
+        Category category = new Category(new NamespacedKey(this, "slimevoid_category"), new CustomItem(Material.ENDER_EYE, "&5SlimeVoid"));
         category.register();
 
         Objects.requireNonNull(getCommand("svresearch")).setExecutor(new ResearchCmd());

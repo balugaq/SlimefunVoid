@@ -111,6 +111,7 @@ public class VoidAltar extends SlimefunItem {
         CustomItem dropped = new CustomItem(stack, "VoidItem - " + System.currentTimeMillis());
         storeItem(stack, block);
         Item entity = block.getWorld().dropItem(block.getLocation().add(0.5, 1.2, 0.5), dropped);
+        entity.setInvulnerable(true);
         entity.setVelocity(new Vector(0, 0.1, 0));
         entity.setPickupDelay(32767);
         entity.setTicksLived(Integer.MAX_VALUE);

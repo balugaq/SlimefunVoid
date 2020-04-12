@@ -1,6 +1,7 @@
 package software.bigbade.slimefunvoid.impl;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.mrCookieSlime.Slimefun.Objects.Research;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
@@ -45,57 +46,65 @@ public class BasicSpell implements WandSpell {
         return icon.getItemMeta().getDisplayName();
     }
 
-    public static float getMultiplier(ItemStack item, Elements element) {
+    public static float getMultiplier(ItemStack item, @NonNull WandItem wandItem, Elements element) {
         float amount = WandItem.getElementAmount(item, element);
         if(amount == 0)
             return 1;
-        WandItem wand = WandItem.getWand(item);
-        if (wand == null)
-            return 1;
-        return 1 + amount / wand.getMaxElement();
+        return 1 + amount / wandItem.getMaxElement();
     }
 
     public static float getMultipliedDamage(ItemStack item, float base, Elements element) {
-        base *= getMultiplier(item, Elements.VOID);
+        WandItem wandItem = WandItem.getWand(item);
+        if(wandItem == null)
+            return base;
+        base *= wandItem.getModifier(element);
+        base *= getMultiplier(item, wandItem, Elements.VOID);
         if (element == Elements.WATER || element == Elements.GRASS)
-            base /= getMultiplier(item, Elements.FIRE);
+            base /= getMultiplier(item, wandItem, Elements.FIRE);
         else
-            base *= getMultiplier(item, Elements.FIRE);
+            base *= getMultiplier(item, wandItem, Elements.FIRE);
         if (element != Elements.WATER)
-            base /= getMultiplier(item, Elements.WATER);
+            base /= getMultiplier(item, wandItem, Elements.WATER);
         if (element != Elements.WATER && element != Elements.GRASS) {
-            base /= getMultiplier(item, Elements.GRASS);
+            base /= getMultiplier(item, wandItem, Elements.GRASS);
         }
         if (element != Elements.VOID)
-            base *= getMultiplier(item, Elements.LIGHT);
-        base /= getMultiplier(item, Elements.WIND);
+            base *= getMultiplier(item, wandItem, Elements.LIGHT);
+        base /= getMultiplier(item, wandItem, Elements.WIND);
         return base;
     }
 
     public static float getBackfireDamage(ItemStack item, float base, Elements element) {
-        base *= getMultiplier(item, Elements.FIRE);
+        WandItem wandItem = WandItem.getWand(item);
+        if(wandItem == null)
+            return base;
+        base /= wandItem.getModifier(element);
+        base *= getMultiplier(item, wandItem, Elements.FIRE);
         if (element == Elements.GRASS) {
-            base /= getMultiplier(item, Elements.FIRE);
-            base *= getMultiplier(item, Elements.WATER);
+            base /= getMultiplier(item, wandItem, Elements.FIRE);
+            base *= getMultiplier(item, wandItem, Elements.WATER);
         } else if (element == Elements.WATER) {
-            base /= getMultiplier(item, Elements.GRASS);
-            base *= getMultiplier(item, Elements.FIRE);
+            base /= getMultiplier(item, wandItem, Elements.GRASS);
+            base *= getMultiplier(item, wandItem, Elements.FIRE);
         } else if (element == Elements.FIRE) {
-            base /= getMultiplier(item, Elements.WATER);
-            base *= getMultiplier(item, Elements.GRASS);
+            base /= getMultiplier(item, wandItem, Elements.WATER);
+            base *= getMultiplier(item, wandItem, Elements.GRASS);
         } else if(element == Elements.VOID) {
-            base *= getMultiplier(item, Elements.LIGHT);
+            base *= getMultiplier(item, wandItem, Elements.LIGHT);
         } else if(element == Elements.LIGHT) {
-            base *= getMultiplier(item, Elements.VOID);
+            base *= getMultiplier(item, wandItem, Elements.VOID);
         }
         return base;
     }
 
     public long getCooldown(ItemStack item) {
         long cooldown = baseCooldown;
-        cooldown *= getMultiplier(item, Elements.LIGHT);
-        cooldown /= getMultiplier(item, Elements.ELECTRIC);
-        cooldown /= getMultiplier(item, Elements.WIND);
+        WandItem wandItem = WandItem.getWand(item);
+        if(wandItem == null)
+            return cooldown;
+        cooldown *= getMultiplier(item, wandItem, Elements.LIGHT);
+        cooldown /= getMultiplier(item, wandItem, Elements.ELECTRIC);
+        cooldown /= getMultiplier(item, wandItem, Elements.WIND);
         return cooldown;
     }
 }

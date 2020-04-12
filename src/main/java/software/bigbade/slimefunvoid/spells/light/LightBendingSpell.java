@@ -14,7 +14,7 @@ import software.bigbade.slimefunvoid.items.Items;
 
 public class LightBendingSpell extends BasicSpell {
     public LightBendingSpell() {
-        super(Researches.LIGHT_BENDING.getResearch(), Elements.LIGHT, Items.LIGHT_BENDING_SPELL, 30);
+        super(Researches.LIGHT_BENDING_SPELL.getResearch(), Elements.LIGHT, Items.LIGHT_BENDING_SPELL, 30);
     }
 
     @Override

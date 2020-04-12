@@ -10,14 +10,24 @@ import software.bigbade.slimefunvoid.utils.ResearchIDHandler;
 
 public enum Researches {
     VOID_BENCH("Void Research Bench", 30, Items.VOID_RESEARCH_BENCH),
-    VOID_BAG("Void Bag", Integer.MAX_VALUE, Items.VOID_BAG),
-    VOID_PORTAL("Void Portal", Integer.MAX_VALUE, Items.VOID_PORTAL),
-    VOID_ALTAR("Void Altar", Integer.MAX_VALUE, Items.VOID_ALTAR),
-    BASIC_WAND("Basic Wand", Integer.MAX_VALUE, Items.BASIC_WAND),
-    ADVANCED_WAND("Advanced Wand", Integer.MAX_VALUE, Items.ADVANCED_WAND),
-    FIREBALL("Fireball Spell", Integer.MAX_VALUE, Items.FIREBALL_SPELL),
-    LIGHT_BENDING("Light Bending Spell", Integer.MAX_VALUE, Items.LIGHT_BENDING_SPELL),
-    TELEPORT("Teleport Spell", Integer.MAX_VALUE, Items.TELEPORT_SPELL);
+    VOID_BAG("Void Bag", 10, Items.VOID_BAG),
+    VOID_PORTAL("Void Portal", 30, Items.VOID_PORTAL),
+    VOID_ALTAR("Void Altar", 15, Items.VOID_ALTAR),
+    BASIC_WAND("Basic Wand", 20, Items.BASIC_WAND),
+    ADVANCED_WAND("Advanced Wand", 30, Items.ADVANCED_WAND),
+    COMBUSTION_SPELL("Combustion Spell", 10, Items.COMBUSTION_SPELL),
+    FIREBALL_SPELL("Fireball Spell", 15, Items.FIREBALL_SPELL),
+    LIGHT_BENDING_SPELL("Light Bending Spell", 5, Items.LIGHT_BENDING_SPELL),
+    LIGHT_BEAM_SPELL("Light Beam Spell", 15, Items.LIGHT_BEAM_SPELL),
+    TRACKING_BEAM_SPELL("Tracking Beam Spell", 25, Items.TRACKING_BEAM_SPELL),
+    TELEPORT_SPELL("Teleport Spell", 5, Items.TELEPORT_SPELL),
+    SWAP_SPELL("Swap Spell", 15, Items.SWAP_SPELL),
+    LIGHTNING_SPELL("Lightning Spell", 10, Items.LIGHTNING_SPELL),
+    WATER_SHOCK_SPELL("Water Shock Spell", 15, Items.WATER_SHOCK_SPELL),
+    LEVITATE_SPELL("Levitate Spell", 5, Items.LEVITATE_SPELL),
+    FAST_SWIMMING_SPELL("Fast Swimming Spell", 5, Items.FAST_SWIMMING_SPELL),
+    ICE_SHIELD_SPELL("Ice Shield Spell", 15, Items.ICE_SHIELD_SPELL),
+    TREE_TRAP_SPELL("Tree Trap Spell", 5, Items.TREE_TRAP_SPELL);
 
     private final Research research;
 

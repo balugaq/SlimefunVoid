@@ -10,7 +10,6 @@ import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -18,12 +17,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.api.Elements;
 import software.bigbade.slimefunvoid.api.Spells;
 import software.bigbade.slimefunvoid.api.WandSpell;
 import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.menus.SpellCategoryMenu;
+import software.bigbade.slimefunvoid.utils.SelfCancelableTask;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
@@ -42,13 +40,13 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
     private final int maxElement;
     private final double baseBackfireChance;
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
-    private SpellCategoryMenu menu = new SpellCategoryMenu();
+    private final SpellCategoryMenu menu = new SpellCategoryMenu();
 
     private static final String WAND_REGEX = ChatColor.COLOR_CHAR + ". \\(";
 
-    private HashMap<Player, Double> cooldowns = new HashMap<>();
+    private final HashMap<Player, Double> cooldowns = new HashMap<>();
 
     private static final int BAR_LENGTH = 40;
 
@@ -61,12 +59,17 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
         this.baseBackfireChance = baseBackfireChance;
         boolean spigot;
         try {
-            Class.forName("");
+            Class.forName("net.md_5.bungee.api.ChatMessageType");
             spigot = true;
         } catch (ClassNotFoundException e) {
             spigot = false;
         }
         useCooldown = spigot;
+    }
+
+    public double getModifier(Elements element) {
+        //Overridden by subclasses
+        return 1;
     }
 
     @Nullable
@@ -194,23 +197,24 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
         if (useCooldown) {
             addActionBarRunnable(player, spell, cooldown);
         } else {
-            AtomicInteger id = new AtomicInteger();
-            id.set(Bukkit.getScheduler().scheduleSyncDelayedTask(SlimefunVoid.getInstance(), () -> {
+            SelfCancelableTask task = new SelfCancelableTask();
+            task.setRunnable(() -> {
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(""));
-                Bukkit.getScheduler().cancelTask(id.get());
+                task.cancel();
                 spell.onStop(player, wand);
-            }, cooldown * 20));
+            });
+            task.start(0, cooldown * 20);
         }
     }
 
     private void addActionBarRunnable(Player player, WandSpell spell, long cooldown) {
         ItemStack wand = player.getInventory().getItemInMainHand();
-        AtomicInteger id = new AtomicInteger();
-        id.set(Bukkit.getScheduler().scheduleSyncRepeatingTask(SlimefunVoid.getInstance(), () -> {
+        SelfCancelableTask task = new SelfCancelableTask();
+        task.setRunnable(() -> {
             Double left = cooldowns.get(player);
             if (left == null) {
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(""));
-                Bukkit.getScheduler().cancelTask(id.get());
+                task.cancel();
                 spell.onStop(player, wand);
                 return;
             }
@@ -219,7 +223,8 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
             }
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(getCooldownBar(left, cooldown)));
             cooldowns.replace(player, left - .05);
-        }, 0L, 1L));
+        });
+        task.start(0L, 1L);
     }
 
     private String getCooldownBar(double remaining, float start) {
@@ -256,6 +261,7 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
         if (!cooldowns.containsKey(player)) {
             if (backfires(wand)) {
                 wandSpell.onBackfire(player, item);
+                cooldown(player, item, wandSpell);
             } else {
                 if (wandSpell.onCast(player, item))
                     cooldown(player, item, wandSpell);

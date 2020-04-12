@@ -32,11 +32,11 @@ public class ResearchBenchMenu extends ChestMenu {
 
     public static final NamespacedKey RESEARCH_START = new NamespacedKey(SlimefunVoid.getInstance(), "research_start");
 
-    private CategorySelectMenu researchMenu = new CategorySelectMenu();
+    private final CategorySelectMenu researchMenu = new CategorySelectMenu();
 
     private static final CustomItem NO_RESEARCH = new CustomItem(Material.PAPER, "&aCurrent Research:", ChatColor.WHITE + "None");
 
-    private Map<UUID, Integer> runningTasks = new HashMap<>();
+    private final Map<UUID, Integer> runningTasks = new HashMap<>();
 
     public ResearchBenchMenu() {
         super(SlimefunVoid.getInstance(), "&5Void Research Bench");
@@ -81,26 +81,27 @@ public class ResearchBenchMenu extends ChestMenu {
             VoidResearches research = VoidResearches.valueOf(getEnumName(researchName));
             Long start = data.get(RESEARCH_START, PersistentDataType.LONG);
             Objects.requireNonNull(start);
-            AtomicLong time = new AtomicLong(getRemainingTime(start, research.getResearch()));
+            AtomicLong timeRemaining = new AtomicLong(getRemainingTime(start, research.getResearch()));
             IResearchCategory category = VoidCategories.values()[research.getCategoryID() - 1].getCategory();
-            if (time.get() < 0) {
+            if (timeRemaining.get() < 0) {
                 addResearch(player, research, false);
                 researchItem = NO_RESEARCH;
             } else {
-                researchItem = new CustomItem(Material.PAPER, "&aCurrent Research:", category.getColor() + researchName, ChatColor.WHITE.toString() + time + "s");
+                researchItem = new CustomItem(Material.PAPER, "&aCurrent Research:", category.getColor() + researchName, ChatColor.WHITE.toString() + timeRemaining + "s");
                 runningTasks.put(player.getUniqueId(), Bukkit.getScheduler().scheduleSyncRepeatingTask(SlimefunVoid.getInstance(), () -> {
                     ItemStack running = getItemInSlot(13);
                     ItemMeta meta = running.getItemMeta();
                     Objects.requireNonNull(meta);
                     List<String> lore = meta.getLore();
                     Objects.requireNonNull(lore);
-                    time.set(getRemainingTime(start, research.getResearch()));
-                    if (time.get() < 0) {
+                    long left = getRemainingTime(start, research.getResearch());
+                    if (left < 0) {
                         addResearch(player, research, false);
                         replaceExistingItem(13, NO_RESEARCH);
                         Bukkit.getScheduler().cancelTask(runningTasks.get(player.getUniqueId()));
                     }
-                    lore.set(1, ChatColor.WHITE.toString() + time.get() + "s");
+                    timeRemaining.set(left);
+                    lore.set(1, ChatColor.WHITE.toString() + timeRemaining.get() + "s");
                     meta.setLore(lore);
                     running.setItemMeta(meta);
                 }, 20L, 20L));

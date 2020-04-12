@@ -1,7 +1,6 @@
 package software.bigbade.slimefunvoid.items;
 
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 public final class Items {
@@ -40,11 +39,31 @@ public final class Items {
      * Spells
      */
     public static final SlimefunItemStack FIREBALL_SPELL = new SlimefunItemStack("FIREBALL_SPELL", Material.FIRE_CHARGE, "&cFireball Spell",
-            "&4Allows wands to shoot out", "&4large bursts of flames", DANGEROUS_ITEM);
+            "&aAllows wands to shoot out", "&alarge bursts of flames", DANGEROUS_ITEM);
+    public static final SlimefunItemStack COMBUSTION_SPELL = new SlimefunItemStack("COMBUSTION_SPELL", Material.FLINT_AND_STEEL, "&cCombustion Spell",
+            "&aSpontaniously ignites whatever", "&ayou are looking at");
     public static final SlimefunItemStack LIGHT_BENDING_SPELL = new SlimefunItemStack("LIGHT_BENDING_SPELL", Material.GLASS, "&fLight Bending Spell",
-            "&4Manipulates the light around you", "&4Making you, but not your armor, completely invisible");
-    public static final SlimefunItemStack TELEPORT_SPELL = new SlimefunItemStack("TELEPORT_SPELL", Material.ENDER_EYE, "&5Teleport Spell",
-            "&5A portal through the void allows", "&5instantaneous teleportation");
+            "&aManipulates the light around you", "&aMaking you, but not your armor, completely invisible");
+    public static final SlimefunItemStack LIGHT_BEAM_SPELL = new SlimefunItemStack("LIGHT_BEAM_SPELL", Material.GLOWSTONE_DUST, "&fLight Beam Spell",
+            "&aSummons a beam of pure light", "&ato damage enemies");
+    public static final SlimefunItemStack TRACKING_BEAM_SPELL = new SlimefunItemStack("TRACKING_BEAM_SPELL", Material.GLOWSTONE, "&fTracking Beam Spell",
+            "&aSummons a beam of pure light", "&athat tracks enemies");
+    public static final SlimefunItemStack TELEPORT_SPELL = new SlimefunItemStack("TELEPORT_SPELL", Material.ENDER_PEARL, "&5Teleport Spell",
+            "&aA portal through the void allows", "&ainstantaneous teleportation");
+    public static final SlimefunItemStack SWAP_SPELL = new SlimefunItemStack("SWAP_SPELL", Material.ENDER_EYE, "&5Swap Spell",
+            "&aA small portal switches the location", "&aof two living beings");
+    public static final SlimefunItemStack LIGHTNING_SPELL = new SlimefunItemStack("LIGHTNING_SPELL", Material.DIAMOND_AXE, "&eLightning Spell",
+            "&aElectricity can be channeled into a bolt", "&aAllowing for high damage,", "&aamong other properties.");
+    public static final SlimefunItemStack WATER_SHOCK_SPELL = new SlimefunItemStack("WATER_SHOCK_SPELL", Material.WATER_BUCKET, "&eWater Shock Spell",
+            "&aConducts electricity through the water,", "&ashocking all other players in water");
+    public static final SlimefunItemStack LEVITATE_SPELL = new SlimefunItemStack("LEVITATE_SPELL", Material.SHULKER_SHELL, "&7Levitate Spell",
+            "&aBy increasing the density of", "&athe air beneath the target", "&aThe target will start to float");
+    public static final SlimefunItemStack FAST_SWIMMING_SPELL = new SlimefunItemStack("FAST_SWIMMING_SPELL", Material.OAK_BOAT, "&1Fast Swimming Spell",
+            "&aAllows you to swim", "&athrough the water faster");
+    public static final SlimefunItemStack ICE_SHIELD_SPELL = new SlimefunItemStack("ICE_SHIELD_SPELL", Material.ICE, "&1Ice Shield Spell",
+            "&aFreezes water in the air", "&aForming a sphere of ice");
+    public static final SlimefunItemStack TREE_TRAP_SPELL = new SlimefunItemStack("TREE_TRAP_SPELL", Material.OAK_SAPLING, "&aTree Trap Spell",
+            "&aTraps target in a tree");
 
     private static final SlimefunItemStack[] WANDS = new SlimefunItemStack[]{Items.BASIC_WAND, Items.ADVANCED_WAND};
 
