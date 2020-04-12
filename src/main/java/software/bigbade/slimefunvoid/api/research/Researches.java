@@ -1,5 +1,6 @@
 package software.bigbade.slimefunvoid.api.research;
 
+import lombok.Getter;
 import me.mrCookieSlime.Slimefun.Objects.Research;
 import me.mrCookieSlime.Slimefun.api.Slimefun;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
@@ -31,14 +32,11 @@ public enum Researches {
     ICE_SHIELD_SPELL("Ice Shield Spell", 15, Items.ICE_SHIELD_SPELL),
     TREE_TRAP_SPELL("Tree Trap Spell", 5, Items.TREE_TRAP_SPELL);
 
+    @Getter
     private final Research research;
 
     Researches(String key, int cost, SlimefunItemStack item) {
         this.research = new Research(new NamespacedKey(SlimefunVoid.getInstance(), key.toLowerCase().replace(" ", "_")), ResearchIDHandler.nextID(), key, cost);
         Slimefun.registerResearch(research, item);
-    }
-
-    public Research getResearch() {
-        return research;
     }
 }
