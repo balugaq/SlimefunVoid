@@ -23,6 +23,7 @@ import software.bigbade.slimefunvoid.api.research.VoidRecipes;
 import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.utils.RecipeItems;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -45,8 +46,13 @@ public class VoidAttractor extends SlimefunItem {
             public void tick(Block block, SlimefunItem slimefunItem, Config config) {
                 EnderCrystal crystal = crystals.get(block.getLocation());
                 if(crystal == null) {
-                    crystal = (EnderCrystal) block.getWorld().spawnEntity(block.getLocation(), EntityType.ENDER_CRYSTAL);
-                    crystal.setShowingBottom(false);
+                    Collection<Entity> nearby = block.getWorld().getNearbyEntities(block.getLocation().add(.5, 0, .5), .1, .5, .1, type -> (type.getType() == EntityType.ENDER_CRYSTAL));
+                    if(nearby.isEmpty()) {
+                        crystal = (EnderCrystal) block.getWorld().spawnEntity(block.getLocation().add(.5, 0, .5), EntityType.ENDER_CRYSTAL);
+                        crystal.setShowingBottom(false);
+                    } else {
+                        crystal = (EnderCrystal) nearby.iterator().next();
+                    }
                     crystals.put(block.getLocation(), crystal);
                 }
                 for (Entity entity : block.getWorld().getNearbyEntities(block.getLocation(), 5, 5, 5)) {
@@ -85,10 +91,11 @@ public class VoidAttractor extends SlimefunItem {
     private boolean onBlockPlace(BlockPlaceEvent event, ItemStack item) {
         Block placing = event.getBlockPlaced();
         placing.setType(Material.BARRIER);
-        EnderCrystal crystal = (EnderCrystal) placing.getWorld().spawnEntity(placing.getLocation(), EntityType.ENDER_CRYSTAL);
+        EnderCrystal crystal = (EnderCrystal) placing.getWorld().spawnEntity(placing.getLocation().add(.5, 0, .5), EntityType.ENDER_CRYSTAL);
         crystals.put(placing.getLocation(), crystal);
         crystal.setShowingBottom(false);
         BlockStorage.store(placing, Items.VOID_ATTRACTOR);
+        event.setCancelled(true);
         return true;
     }
 }
