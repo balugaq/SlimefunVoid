@@ -24,23 +24,32 @@ public class TrackingBeamSpell extends BasicSpell {
 
     /**
      * Casts a tracking beam. Tracking code from https://www.spigotmc.org/threads/1-15-x-particle-beams-vectors-and-locations-oh-my.418399/
+     *
      * @param player Player casting the spell
-     * @param wand Item wand
+     * @param wand   Item wand
      * @return Whether the spell casts or not
      */
     @Override
     public boolean onCast(Player player, ItemStack wand) {
         SelfCancelableTask task = new SelfCancelableTask();
-        Location location = player.getEyeLocation();
+        Location location = player.getEyeLocation().clone();
         final int distance = (int) getMultipliedDamage(wand, 20, Elements.LIGHT);
         task.setRunnable(() -> {
             location.add(location.getDirection());
             player.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location, 1, 0, 0, 0, 0);
             Collection<Entity> nearby = player.getWorld().getNearbyEntities(location, 5, 5, 5);
             if (!nearby.isEmpty()) {
-                Entity target = nearby.iterator().next();
+                Entity target = null;
+                for (Entity found : nearby) {
+                    if (target == null) {
+                        target = found;
+                    } else {
+                        if(found.getLocation().distanceSquared(location) < target.getLocation().distanceSquared(location))
+                            target = found;
+                    }
+                }
                 if (target instanceof LivingEntity && target != player) {
-                    if (target.getLocation().distanceSquared(location) <= .5) {
+                    if (target.getLocation().add(0, target.getHeight()/2, 0).distanceSquared(location) <= .55) {
                         ((LivingEntity) target).damage(getMultipliedDamage(wand, 5, Elements.LIGHT), player);
                         target.setVelocity(target.getVelocity().add(location.getDirection().normalize().multiply(1.5)));
                         task.cancel();

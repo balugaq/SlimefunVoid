@@ -29,7 +29,7 @@ public class LightBeamSpell extends BasicSpell {
         task.setRunnable(() -> {
             location.add(location.getDirection());
             player.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location, 1, 0, 0, 0, 0);
-            Collection<Entity> nearby = player.getWorld().getNearbyEntities(location, .5, .5, .5);
+            Collection<Entity> nearby = player.getWorld().getNearbyEntities(location, .55, .55, .55);
             if(!nearby.isEmpty()) {
                 Entity target = nearby.iterator().next();
                 if(target instanceof LivingEntity && target != player) {
