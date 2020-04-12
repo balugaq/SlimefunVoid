@@ -14,7 +14,9 @@ import software.bigbade.slimefunvoid.spells.light.LightBendingSpell;
 import software.bigbade.slimefunvoid.spells.light.TrackingBeamSpell;
 import software.bigbade.slimefunvoid.spells.water.FastSwimmingSpell;
 import software.bigbade.slimefunvoid.spells.water.IceShieldSpell;
+import software.bigbade.slimefunvoid.spells.wind.LaunchSpell;
 import software.bigbade.slimefunvoid.spells.wind.LevitateSpell;
+import software.bigbade.slimefunvoid.spells.wind.ThrowSpell;
 
 @RequiredArgsConstructor
 public enum Spells {
@@ -28,6 +30,8 @@ public enum Spells {
     LIGHTNING(new LightningSpell()),
     WATER_SHOCK(new WaterShockSpell()),
     LEVITATE(new LevitateSpell()),
+    LAUNCH(new LaunchSpell()),
+    THROW(new ThrowSpell()),
     FAST_SWIMMING(new FastSwimmingSpell()),
     ICE_SHIELD(new IceShieldSpell()),
     TREE_TRAP(new TreeTrapSpell());

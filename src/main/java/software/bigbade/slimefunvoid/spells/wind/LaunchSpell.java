@@ -5,25 +5,24 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 import software.bigbade.slimefunvoid.api.Elements;
 import software.bigbade.slimefunvoid.api.research.Researches;
 import software.bigbade.slimefunvoid.impl.BasicSpell;
 import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.spells.ender.SwapSpell;
 
-public class LevitateSpell extends BasicSpell {
-    public LevitateSpell() {
-        super(Researches.LEVITATE_SPELL.getResearch(), Elements.WIND, Items.LEVITATE_SPELL, 5);
+public class LaunchSpell extends BasicSpell {
+    public LaunchSpell() {
+        super(Researches.LAUNCH_SPELL.getResearch(), Elements.WIND, Items.LAUNCH_SPELL, 6);
     }
 
     @Override
     public boolean onCast(Player player, ItemStack wand) {
-        float distance = getMultipliedDamage(wand, 20, Elements.VOID);
+        float distance = getMultipliedDamage(wand, 20, Elements.WIND);
         for(Entity entity : player.getNearbyEntities(distance, 5, distance)) {
             if(entity instanceof LivingEntity && SwapSpell.getLookingAt(player, entity)) {
-                addLevitation((LivingEntity) entity, wand, (int) getMultipliedDamage(wand, 1, Elements.WIND));
+                entity.setVelocity(entity.getVelocity().add(getVelocity(wand)));
                 return true;
             }
         }
@@ -33,10 +32,10 @@ public class LevitateSpell extends BasicSpell {
 
     @Override
     public void onBackfire(Player player, ItemStack wand) {
-        addLevitation(player, wand, (int) getBackfireDamage(wand, 1, Elements.WIND));
+        player.setVelocity(player.getVelocity().add(getVelocity(wand)));
     }
 
-    private void addLevitation(LivingEntity target, ItemStack wand, int amount) {
-        target.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, amount, (int) getMultipliedDamage(wand, 10, Elements.WIND)*20));
+    public static Vector getVelocity(ItemStack wand) {
+        return new Vector(0, getMultipliedDamage(wand, 1.5f, Elements.WIND), 0);
     }
 }

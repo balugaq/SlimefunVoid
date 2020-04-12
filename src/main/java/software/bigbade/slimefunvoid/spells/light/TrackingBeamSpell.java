@@ -15,7 +15,9 @@ import software.bigbade.slimefunvoid.impl.BasicSpell;
 import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.utils.SelfCancelableTask;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Objects;
 
 public class TrackingBeamSpell extends BasicSpell {
     public TrackingBeamSpell() {
@@ -37,32 +39,13 @@ public class TrackingBeamSpell extends BasicSpell {
         task.setRunnable(() -> {
             location.add(location.getDirection());
             player.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location, 1, 0, 0, 0, 0);
-            Collection<Entity> nearby = player.getWorld().getNearbyEntities(location, 5, 5, 5);
-            if (!nearby.isEmpty()) {
-                Entity target = null;
-                for (Entity found : nearby) {
-                    if (target == null) {
-                        target = found;
-                    } else {
-                        if(found.getLocation().distanceSquared(location) < target.getLocation().distanceSquared(location))
-                            target = found;
-                    }
+            Entity target = getTarget(location);
+            if (target instanceof LivingEntity && target != player) {
+                if (damagesTarget(target, player, location, wand)) {
+                    task.cancel();
+                    return;
                 }
-                if (target instanceof LivingEntity && target != player) {
-                    if (target.getLocation().add(0, target.getHeight()/2, 0).distanceSquared(location) <= .55) {
-                        ((LivingEntity) target).damage(getMultipliedDamage(wand, 5, Elements.LIGHT), player);
-                        target.setVelocity(target.getVelocity().add(location.getDirection().normalize().multiply(1.5)));
-                        task.cancel();
-                        return;
-                    }
-                    Location targetLoc = target.getLocation().clone().add(0, target.getHeight() / 2, 0);
-                    Vector particleDirection = location.getDirection();
-                    Vector inBetween = targetLoc.clone().subtract(location).toVector().normalize();
-
-                    inBetween.multiply(0.5);
-                    particleDirection.add(inBetween).normalize();
-                    location.setDirection(particleDirection);
-                }
+                track(target, location);
             }
             if (task.getLoops() == distance)
                 task.cancel();
@@ -71,8 +54,43 @@ public class TrackingBeamSpell extends BasicSpell {
         return true;
     }
 
+    @Nullable
+    private Entity getTarget(Location location) {
+        Objects.requireNonNull(location.getWorld());
+        Collection<Entity> nearby = location.getWorld().getNearbyEntities(location, 5, 5, 5);
+        Entity target = null;
+        for (Entity found : nearby) {
+            if (target == null) {
+                target = found;
+            } else {
+                if (found.getLocation().distanceSquared(location) < target.getLocation().distanceSquared(location))
+                    target = found;
+            }
+        }
+        return target;
+    }
+
+    private boolean damagesTarget(Entity target, Player caster, Location location, ItemStack wand) {
+        if (target.getLocation().add(0, target.getHeight() / 2, 0).distanceSquared(location) <= .55) {
+            ((LivingEntity) target).damage(getMultipliedDamage(wand, 5, Elements.LIGHT), caster);
+            target.setVelocity(target.getVelocity().add(location.getDirection().normalize().multiply(1.5)));
+            return true;
+        }
+        return false;
+    }
+
+    private void track(Entity target, Location location) {
+        Location targetLoc = target.getLocation().clone().add(0, target.getHeight() / 2, 0);
+        Vector particleDirection = location.getDirection();
+        Vector inBetween = targetLoc.clone().subtract(location).toVector().normalize();
+
+        inBetween.multiply(0.5);
+        particleDirection.add(inBetween).normalize();
+        location.setDirection(particleDirection);
+    }
+
     @Override
     public void onBackfire(Player player, ItemStack wand) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) getMultipliedDamage(wand, 100, Elements.LIGHT), 0));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) getBackfireDamage(wand, 100, Elements.LIGHT), 0));
     }
 }

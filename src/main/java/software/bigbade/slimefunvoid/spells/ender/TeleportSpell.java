@@ -43,7 +43,7 @@ public class TeleportSpell extends BasicSpell {
 
     public static void randomTeleport(Player player, ItemStack wand) {
         Location location = player.getLocation().clone();
-        double distance = getMultipliedDamage(wand, 5, Elements.VOID);
+        double distance = getBackfireDamage(wand, 5, Elements.VOID);
         double half = distance/2;
         location.add(ThreadLocalRandom.current().nextDouble(distance)-(half), 0, ThreadLocalRandom.current().nextDouble(distance)-(half));
         location.setY(player.getWorld().getHighestBlockAt(location).getLocation().getY()+1);

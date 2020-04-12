@@ -25,6 +25,8 @@ public enum Researches {
     LIGHTNING_SPELL("Lightning Spell", 10, Items.LIGHTNING_SPELL),
     WATER_SHOCK_SPELL("Water Shock Spell", 15, Items.WATER_SHOCK_SPELL),
     LEVITATE_SPELL("Levitate Spell", 5, Items.LEVITATE_SPELL),
+    LAUNCH_SPELL("Launch Spell", 15, Items.LAUNCH_SPELL),
+    THROW_SPELL("Throw Spell", 25, Items.THROW_SPELL),
     FAST_SWIMMING_SPELL("Fast Swimming Spell", 5, Items.FAST_SWIMMING_SPELL),
     ICE_SHIELD_SPELL("Ice Shield Spell", 15, Items.ICE_SHIELD_SPELL),
     TREE_TRAP_SPELL("Tree Trap Spell", 5, Items.TREE_TRAP_SPELL);

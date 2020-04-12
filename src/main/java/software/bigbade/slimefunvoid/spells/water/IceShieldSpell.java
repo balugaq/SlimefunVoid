@@ -30,7 +30,7 @@ public class IceShieldSpell extends BasicSpell {
 
     @Override
     public void onBackfire(Player player, ItemStack wand) {
-        makeSphere(player.getLocation(), Material.WATER, Material.AIR, getMultipliedDamage(wand, 3, Elements.WATER), false);
+        makeSphere(player.getLocation(), Material.WATER, Material.AIR, getBackfireDamage(wand, 3, Elements.WATER), false);
         toRemove.put(player.getUniqueId(), player.getLocation());
     }
 

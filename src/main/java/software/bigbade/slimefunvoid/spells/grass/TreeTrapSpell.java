@@ -52,7 +52,7 @@ public class TreeTrapSpell extends BasicSpell {
     }
 
     private void trapEntity(LivingEntity entity, ItemStack wand) {
-        IceShieldSpell.makeSphere(entity.getLocation(), Material.OAK_WOOD, Material.AIR, getMultipliedDamage(wand, 3, Elements.GRASS), true);
+        IceShieldSpell.makeSphere(entity.getLocation(), Material.OAK_WOOD, Material.AIR, getBackfireDamage(wand, 3, Elements.GRASS), true);
         entity.getLocation().getBlock().setType(Material.AIR);
         entity.getLocation().add(0, 1, 0).getBlock().setType(Material.AIR);
     }

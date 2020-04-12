@@ -41,6 +41,6 @@ public class WaterShockSpell extends BasicSpell {
     public void onBackfire(Player player, ItemStack wand) {
         if(player.getLocation().getBlock().getType() != Material.WATER)
             return;
-        player.damage(getMultipliedDamage(wand, 2, Elements.ELECTRIC), player);
+        player.damage(getBackfireDamage(wand, 2, Elements.ELECTRIC), player);
     }
 }

@@ -23,7 +23,7 @@ public class LightningSpell extends BasicSpell {
     public boolean onCast(Player player, ItemStack wand) {
         Block target = player.getTargetBlockExact((int) getMultipliedDamage(wand, 10, Elements.ELECTRIC), FluidCollisionMode.NEVER);
         if (target != null) {
-            strikeLightning(wand, target.getLocation());
+            strikeLightning(target.getLocation(), (int) getMultipliedDamage(wand, 1, Elements.ELECTRIC));
             return true;
         }
         player.sendMessage(ChatColor.RED + "That target is out of range! You must target a block");
@@ -32,11 +32,10 @@ public class LightningSpell extends BasicSpell {
 
     @Override
     public void onBackfire(Player player, ItemStack wand) {
-        strikeLightning(wand, player.getLocation());
+        strikeLightning(player.getLocation(), (int) getBackfireDamage(wand, 1, Elements.ELECTRIC));
     }
 
-    private void strikeLightning(ItemStack wand, Location location) {
-        final int amount = (int) getMultipliedDamage(wand, 1, Elements.ELECTRIC);
+    private void strikeLightning(Location location, final int amount) {
         Objects.requireNonNull(location.getWorld());
         SelfCancelableTask task = new SelfCancelableTask();
         task.setRunnable(() -> {

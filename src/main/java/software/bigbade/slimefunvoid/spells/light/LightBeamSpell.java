@@ -47,6 +47,6 @@ public class LightBeamSpell extends BasicSpell {
 
     @Override
     public void onBackfire(Player player, ItemStack wand) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) getMultipliedDamage(wand, 100, Elements.LIGHT), 0));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, (int) getBackfireDamage(wand, 100, Elements.LIGHT), 0));
     }
 }

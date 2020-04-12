@@ -58,6 +58,10 @@ public final class Items {
             "&aConducts electricity through the water,", "&ashocking all other players in water");
     public static final SlimefunItemStack LEVITATE_SPELL = new SlimefunItemStack("LEVITATE_SPELL", Material.SHULKER_SHELL, "&7Levitate Spell",
             "&aBy increasing the density of", "&athe air beneath the target", "&aThe target will start to float");
+    public static final SlimefunItemStack LAUNCH_SPELL = new SlimefunItemStack("LAUNCH_SPELL", Material.SHULKER_BOX, "&7Launch Spell",
+            "&aUse a large amount of upwards momentum", "&ato send your target flying");
+    public static final SlimefunItemStack THROW_SPELL = new SlimefunItemStack("THROW_SPELL", Material.FEATHER, "&7Throw Spell",
+            "&aAllows you to send your target", "&awhere you are looking");
     public static final SlimefunItemStack FAST_SWIMMING_SPELL = new SlimefunItemStack("FAST_SWIMMING_SPELL", Material.OAK_BOAT, "&1Fast Swimming Spell",
             "&aAllows you to swim", "&athrough the water faster");
     public static final SlimefunItemStack ICE_SHIELD_SPELL = new SlimefunItemStack("ICE_SHIELD_SPELL", Material.ICE, "&1Ice Shield Spell",

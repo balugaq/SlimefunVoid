@@ -41,9 +41,9 @@ public class SwapSpell extends BasicSpell {
 
     public static boolean getLookingAt(Player player, Entity target) {
         Location eye = player.getEyeLocation();
-        Vector toEntity = target.getLocation().subtract(eye).toVector();
+        Vector toEntity = target.getLocation().add(0, target.getHeight()/2, 0).subtract(eye).toVector();
         double dot = toEntity.normalize().dot(eye.getDirection());
 
-        return dot > 0.99D;
+        return dot > .97D;
     }
 }
