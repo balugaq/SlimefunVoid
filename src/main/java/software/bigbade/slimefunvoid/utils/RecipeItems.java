@@ -14,4 +14,5 @@ public class RecipeItems {
     public static final ItemStack ENCHANTING_TABLE = new ItemStack(Material.ENCHANTING_TABLE);
     public static final ItemStack ENDER_CHEST = new ItemStack(Material.ENDER_CHEST);
     public static final ItemStack END_STONE = new ItemStack(Material.END_STONE);
+    public static final ItemStack HOPPER = new ItemStack(Material.HOPPER);
 }

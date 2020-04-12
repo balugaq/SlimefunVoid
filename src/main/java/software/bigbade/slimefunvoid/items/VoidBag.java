@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.interfaces.NotPlaceable;
 import me.mrCookieSlime.Slimefun.Objects.handlers.ItemUseHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,7 +30,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> {
+public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> implements NotPlaceable {
     public static final NamespacedKey BAG_LOCATION = new NamespacedKey(SlimefunVoid.getInstance(), "bagLocation");
 
     @Getter

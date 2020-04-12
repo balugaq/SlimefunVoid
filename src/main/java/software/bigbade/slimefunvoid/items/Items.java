@@ -18,6 +18,8 @@ public final class Items {
             "&5Allows access into the void", "&5and Void Rituals with Void Altars", DANGEROUS_ITEM);
     public static final SlimefunItemStack VOID_ALTAR = new SlimefunItemStack("VOID_ALTAR", Material.END_STONE_BRICKS, "&5Void Altar",
             "&5Holds items for tapping into The Void", DANGEROUS_ITEM);
+    public static final SlimefunItemStack VOID_ATTRACTOR = new SlimefunItemStack("VOID_ATTRACTOR", Material.END_CRYSTAL, "&5Void Attractor",
+            "&5Sucks all nearby entities", "&5towards it", DANGEROUS_ITEM);
     public static final SlimefunItemStack VOID_QUARRY = new SlimefunItemStack("VOID_QUARRY", Material.ENDER_CHEST, "&5Void Quarry",
             "&5Allows the mining of","&5large areas of blocks", "&5The Void &cconsumes some blocks mined");
 
@@ -32,7 +34,7 @@ public final class Items {
      */
     public static final SlimefunItemStack BASIC_WAND = new SlimefunItemStack("BASIC_WAND", Material.STICK, "&dBasic Wand",
             "&aCapable of precise energy usage", "&afrom &5The Void", "&aMax Elements: 300", DANGEROUS_ITEM);
-    public static final SlimefunItemStack ADVANCED_WAND = new SlimefunItemStack("ADVANCED_WAND", Material.BLAZE_ROD, "&dBasic Wand",
+    public static final SlimefunItemStack ADVANCED_WAND = new SlimefunItemStack("ADVANCED_WAND", Material.BLAZE_ROD, "&Advanced Wand",
             "&aA refined wand, allowing for stronger spells", "&aMax Elements: 500", DANGEROUS_ITEM);
 
     /**
