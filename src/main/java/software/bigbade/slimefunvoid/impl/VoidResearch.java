@@ -1,12 +1,13 @@
 package software.bigbade.slimefunvoid.impl;
 
-import lombok.Getter;
-import me.mrCookieSlime.Slimefun.Objects.Research;
-import org.bukkit.ChatColor;
-import software.bigbade.slimefunvoid.api.research.IVoidResearch;
-
 import java.util.Arrays;
 import java.util.List;
+
+import org.bukkit.ChatColor;
+
+import io.github.thebusybiscuit.slimefun4.core.researching.Research;
+import lombok.Getter;
+import software.bigbade.slimefunvoid.api.research.IVoidResearch;
 
 public class VoidResearch implements IVoidResearch {
     @Getter
@@ -52,4 +53,25 @@ public class VoidResearch implements IVoidResearch {
     public int hashCode() {
         return name.hashCode();
     }
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public List<String> getLore() {
+		return lore;
+	}
+
+	@Override
+	public Research getUnlock() {
+		return unlock;
+	}
+
+	@Override
+	public long getResearchTime() {
+		// TODO Auto-generated method stub
+		return researchTime;
+	}
 }

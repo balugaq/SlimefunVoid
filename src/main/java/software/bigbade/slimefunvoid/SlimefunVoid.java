@@ -29,15 +29,15 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
         new Metrics(this, 6993);
 
         Category category = new Category(new NamespacedKey(this, "slimevoid_category"), new CustomItem(Material.ENDER_EYE, "&5SlimeVoid"));
-        category.register();
+        category.register(this);
 
         Objects.requireNonNull(getCommand("svresearch")).setExecutor(new ResearchCmd());
         Objects.requireNonNull(getCommand("svresearch")).setTabCompleter(new ResearchTabCompleter());
 
-        itemManager = new ItemManager(category);
+        itemManager = new ItemManager();
         itemManager.registerItems();
 
-        new ListenerManager(this).registerListeners();
+        new ListenerManager().registerListeners();
     }
 
     private static void setInstance(SlimefunVoid instance) {

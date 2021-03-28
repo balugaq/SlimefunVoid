@@ -1,18 +1,12 @@
 package software.bigbade.slimefunvoid.blocks;
 
-import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockBreakHandler;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockPlaceHandler;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockUseHandler;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.bukkit.ChatColor;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
@@ -24,17 +18,25 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+
+import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Objects.Category;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
+import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.items.Items;
-import software.bigbade.slimefunvoid.menus.ritals.RitualMenu;
 import software.bigbade.slimefunvoid.menus.VoidMenu;
+import software.bigbade.slimefunvoid.menus.ritals.RitualMenu;
 import software.bigbade.slimefunvoid.utils.RecipeItems;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class VoidPortal extends SlimefunItem {
     private ChestMenu menu = new ChestMenu(SlimefunVoid.getInstance(), "&5Void Portal");
@@ -57,14 +59,33 @@ public class VoidPortal extends SlimefunItem {
 
         initMenu();
 
-        BlockPlaceHandler blockPlaceHandler = this::onBlockPlace;
-        addItemHandler(blockPlaceHandler);
+        addItemHandler(new BlockPlaceHandler(true) {
+			
+			@Override
+			public void onPlayerPlace(BlockPlaceEvent e) {
+		        BlockStorage.addBlockInfo(e.getBlock(), "owner", e.getPlayer().getUniqueId().toString());
+		        altars.add(new VoidPortalData(e.getBlock().getLocation()));
+			}
+		});
 
         BlockUseHandler blockUseHandler = this::onBlockUse;
         addItemHandler(blockUseHandler);
 
-        BlockBreakHandler blockBreakHandler = this::onBlockBreak;
-        addItemHandler(blockBreakHandler);
+        addItemHandler(new BlockBreakHandler(false, false) {
+			
+			@Override
+			public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
+		        VoidPortalData data = getPortalData(e.getBlock().getLocation());
+		        if (data == null) {
+		            return;
+		        }
+		        if (data.getAltars().size() > 0) {
+		            e.getPlayer().sendMessage(ChatColor.RED + "You must break all altars before you break the portal.");
+		            e.setCancelled(true);
+		        }
+				
+			}
+		});
     }
 
     private void initMenu() {
@@ -130,30 +151,11 @@ public class VoidPortal extends SlimefunItem {
         }
     }
 
-    private boolean onBlockPlace(BlockPlaceEvent event, ItemStack item) {
-        BlockStorage.addBlockInfo(event.getBlock(), "owner", event.getPlayer().getUniqueId().toString());
-        altars.add(new VoidPortalData(event.getBlock().getLocation()));
-        return true;
-    }
-
-    private boolean onBlockBreak(BlockBreakEvent event, ItemStack item, int fortune, List<ItemStack> drops) {
-        VoidPortalData data = getPortalData(event.getBlock().getLocation());
-        if (data == null) {
-            return true;
-        }
-        if (data.getAltars().size() > 0) {
-            event.getPlayer().sendMessage(ChatColor.RED + "You must break all altars before you break the portal.");
-            event.setCancelled(true);
-            return false;
-        }
-        return true;
-    }
-
     public static void checkAltars(VoidPortalData data) {
         for (int i = 0; i < X_OFFSETS.length; i++) {
             Location newLocation = data.getPortal().clone().add(X_OFFSETS[i], 0, Z_OFFSETS[i]);
             Block block = newLocation.getBlock();
-            if (block.getType().equals(Material.END_STONE_BRICKS) && BlockStorage.check(newLocation, Items.VOID_ALTAR.getItemID()) && !data.getAltars().contains(newLocation)) {
+            if (block.getType().equals(Material.END_STONE_BRICKS) && BlockStorage.check(newLocation, Items.VOID_ALTAR.getItemId()) && !data.getAltars().contains(newLocation)) {
                 data.getAltars().add(newLocation);
             }
         }
@@ -179,5 +181,26 @@ public class VoidPortal extends SlimefunItem {
 
         @Getter
         private final Location portal;
+
+		public VoidPortalData(@Nonnull Location location) {
+			this.portal = location;
+		}
+
+		public Location getPortal() {
+			return portal;
+		}
+
+		public List<Location> getAltars() {
+			return altars;
+		}
+
+		public boolean isInUse() {
+			return inUse;
+		}
     }
+
+	public List<VoidPortalData> getAltars() {
+		// TODO Auto-generated method stub
+		return altars;
+	}
 }

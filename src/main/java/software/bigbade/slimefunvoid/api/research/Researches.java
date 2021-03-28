@@ -1,10 +1,10 @@
 package software.bigbade.slimefunvoid.api.research;
 
-import lombok.Getter;
-import me.mrCookieSlime.Slimefun.Objects.Research;
-import me.mrCookieSlime.Slimefun.api.Slimefun;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import org.bukkit.NamespacedKey;
+
+import io.github.thebusybiscuit.slimefun4.core.researching.Research;
+import lombok.Getter;
+import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.utils.ResearchIDHandler;
@@ -37,6 +37,12 @@ public enum Researches {
 
     Researches(String key, int cost, SlimefunItemStack item) {
         this.research = new Research(new NamespacedKey(SlimefunVoid.getInstance(), key.toLowerCase().replace(" ", "_")), ResearchIDHandler.nextID(), key, cost);
-        Slimefun.registerResearch(research, item);
+        research.addItems(item);
+        research.register();
     }
+
+    Research getResearch() {
+		// TODO Auto-generated method stub
+		return research;
+	}
 }

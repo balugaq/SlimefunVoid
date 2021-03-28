@@ -1,13 +1,10 @@
 package software.bigbade.slimefunvoid.blocks;
 
-import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockPlaceHandler;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockUseHandler;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,14 +16,18 @@ import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
+import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import me.mrCookieSlime.Slimefun.Objects.Category;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
+import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import software.bigbade.slimefunvoid.api.research.VoidRecipes;
 import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.utils.RecipeItems;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 public class VoidAttractor extends SlimefunItem {
     private final Map<Location, EnderCrystal> crystals = new HashMap<>();
@@ -70,8 +71,19 @@ public class VoidAttractor extends SlimefunItem {
 
         addItemHandler(ticker);
 
-        BlockPlaceHandler placeHandler = this::onBlockPlace;
-        addItemHandler(placeHandler);
+        addItemHandler(new BlockPlaceHandler(true) {
+			
+			@Override
+			public void onPlayerPlace(BlockPlaceEvent e) {
+		        Block placing = e.getBlockPlaced();
+		        placing.setType(Material.BARRIER);
+		        EnderCrystal crystal = (EnderCrystal) placing.getWorld().spawnEntity(placing.getLocation().add(.5, 0, .5), EntityType.ENDER_CRYSTAL);
+		        crystals.put(placing.getLocation(), crystal);
+		        crystal.setShowingBottom(false);
+		        BlockStorage.store(placing, Items.VOID_ATTRACTOR);
+		        e.setCancelled(true);
+			}
+		});
 
         BlockUseHandler blockUseHandler = this::onBlockUse;
         addItemHandler(blockUseHandler);
@@ -86,16 +98,5 @@ public class VoidAttractor extends SlimefunItem {
         clicked.get().setType(Material.AIR);
         event.getPlayer().getWorld().dropItemNaturally(clicked.get().getLocation(), Items.VOID_ATTRACTOR);
         crystals.remove(clicked.get().getLocation());
-    }
-
-    private boolean onBlockPlace(BlockPlaceEvent event, ItemStack item) {
-        Block placing = event.getBlockPlaced();
-        placing.setType(Material.BARRIER);
-        EnderCrystal crystal = (EnderCrystal) placing.getWorld().spawnEntity(placing.getLocation().add(.5, 0, .5), EntityType.ENDER_CRYSTAL);
-        crystals.put(placing.getLocation(), crystal);
-        crystal.setShowingBottom(false);
-        BlockStorage.store(placing, Items.VOID_ATTRACTOR);
-        event.setCancelled(true);
-        return true;
     }
 }

@@ -32,7 +32,13 @@ public enum VoidMessages {
     WISE_MENTOR("A wise mentor gases upon you", "It seems to acknowledge, and accept your presence", new String[] { "Leave immediately", "Ask for tutoring", "Steal some knowledge", }, Arrays.asList(
 
     ));
-    @Getter
+    VoidMessages(String name, String description, String[] items, List<Consumer<Player>> consumers) {
+		this.name = name;
+		this.description = description;
+		this.items = items;
+		this.consumers = consumers;
+    }
+	@Getter
     private final String name;
     @Getter
     private final String description;

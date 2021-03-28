@@ -31,20 +31,31 @@ public class PlacedVoidQuarry {
     @Nullable
     private Location chest;
 
-    @Getter
-    private final Location quarry;
+    private final Location quarry = null;
 
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof PlacedVoidQuarry) {
             PlacedVoidQuarry quarry = (PlacedVoidQuarry) obj;
-            return quarry.getSize().equals(size) && Objects.requireNonNull(quarry.getBottomCorner()).equals(getBottomCorner());
+            return quarry.getSize().equals(size) && Objects.requireNonNull(quarry.getBottomCorner()).equals(bottomCorner);
         }
         return false;
     }
 
-    @Override
+    private Location getBottomCorner() {
+		return quarry.getBlock().getLocation();
+	}
+
+	public Vector getSize() {
+		return quarry.toVector();
+	}
+
+	@Override
     public int hashCode() {
         return Objects.requireNonNull(bottomCorner).hashCode();
     }
+
+	public Location getQuarry() {
+		return quarry;
+	}
 }

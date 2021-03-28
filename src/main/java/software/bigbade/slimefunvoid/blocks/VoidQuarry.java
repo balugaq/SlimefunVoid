@@ -1,12 +1,14 @@
 package software.bigbade.slimefunvoid.blocks;
 
-import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
-import lombok.Getter;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockBreakHandler;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockPlaceHandler;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockUseHandler;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,19 +21,19 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
+import lombok.Getter;
+import me.mrCookieSlime.Slimefun.Objects.Category;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import software.bigbade.slimefunvoid.PlacedVoidQuarry;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.api.research.VoidRecipes;
 import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.utils.RecipeItems;
-
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
 
 public class VoidQuarry extends SlimefunItem {
     @Getter
@@ -50,14 +52,32 @@ public class VoidQuarry extends SlimefunItem {
                 RecipeItems.ENDER_EYE, null, RecipeItems.ENDER_EYE,
                 RecipeItems.OBSIDIAN, RecipeItems.ENDER_EYE, RecipeItems.OBSIDIAN
         });
-        BlockPlaceHandler blockPlaceHandler = this::onPlace;
-        addItemHandler(blockPlaceHandler);
+        addItemHandler(new BlockPlaceHandler(true) {
+			
+			@Override
+			public void onPlayerPlace(BlockPlaceEvent e) {
+		        Bukkit.getScheduler().runTaskAsynchronously(SlimefunVoid.getInstance(), () -> {
+		            if (setupQuarry(e.getBlock()))
+		                e.getPlayer().sendMessage(ChatColor.GREEN + "Setup quarry." + WARNING);
+		            else
+		                e.getPlayer().sendMessage(ChatColor.RED + "Could not setup quarry!" + WARNING);
+		        });
+			}
+		});
 
         BlockUseHandler blockUseHandler = this::onClick;
         addItemHandler(blockUseHandler);
 
-        BlockBreakHandler blockBreakHandler = this::onBreak;
-        addItemHandler(blockBreakHandler);
+        addItemHandler(new BlockBreakHandler(false, false) {
+			
+			@Override
+			public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
+		        Optional<Map.Entry<PlacedVoidQuarry, Integer>> entry = quarries.entrySet().stream()
+		                .filter(quarry -> quarry.getKey().getQuarry().equals(e.getBlock().getLocation()))
+		                .findFirst();
+		        entry.ifPresent(placedVoidQuarryIntegerEntry -> Bukkit.getScheduler().cancelTask(placedVoidQuarryIntegerEntry.getValue()));
+			}
+		});
     }
 
     private boolean onBreak(BlockBreakEvent event, ItemStack item, int fortune, List<ItemStack> drops) {

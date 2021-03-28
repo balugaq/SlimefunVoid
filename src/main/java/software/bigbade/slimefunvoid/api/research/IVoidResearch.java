@@ -1,10 +1,12 @@
 package software.bigbade.slimefunvoid.api.research;
 
-import me.mrCookieSlime.Slimefun.Objects.Research;
-import org.bukkit.ChatColor;
+import java.util.List;
 
 import javax.annotation.Nullable;
-import java.util.List;
+
+import org.bukkit.ChatColor;
+
+import io.github.thebusybiscuit.slimefun4.core.researching.Research;
 
 public interface IVoidResearch {
     String getName();

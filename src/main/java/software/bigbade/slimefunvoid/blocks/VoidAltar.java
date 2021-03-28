@@ -1,22 +1,17 @@
 package software.bigbade.slimefunvoid.blocks;
 
-import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
-import lombok.SneakyThrows;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockBreakHandler;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockPlaceHandler;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockUseHandler;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
+import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.Nullable;
+
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -26,12 +21,20 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+
+import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
+import lombok.SneakyThrows;
+import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Objects.Category;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
+import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.utils.RecipeItems;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Optional;
 
 public class VoidAltar extends SlimefunItem {
     private final VoidPortal portal;
@@ -46,11 +49,37 @@ public class VoidAltar extends SlimefunItem {
         BlockUseHandler blockUseHandler = this::onBlockUse;
         addItemHandler(blockUseHandler);
 
-        BlockPlaceHandler blockPlaceHandler = this::onBlockPlace;
-        addItemHandler(blockPlaceHandler);
+        addItemHandler(new BlockPlaceHandler(true) {
+			
+			@Override
+			public void onPlayerPlace(BlockPlaceEvent e) {
+		        Item held = getItem(e.getBlock());
+		        VoidPortal.VoidPortalData location = findPortal(e.getBlock().getLocation());
+		        if (held != null) {
+		        	dropItem(e.getPlayer(), new ItemStack(held.getItemStack().getType()), e.getBlock());
+		            held.remove();
+		        }
+		        if (location != null) {
+		            location.getAltars().remove(e.getBlock().getLocation());
+		        }
+			}
+		});
 
-        BlockBreakHandler blockBreakHandler = this::onBlockBreak;
-        addItemHandler(blockBreakHandler);
+        addItemHandler(new BlockBreakHandler(false, false) {
+			
+			@Override
+			public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
+		        Item held = getItem(e.getBlock());
+		        VoidPortal.VoidPortalData location = findPortal(e.getBlock().getLocation());
+		        if (held != null) {
+		            drops.add(new ItemStack(held.getItemStack().getType()));
+		            held.remove();
+		        }
+		        if (location != null) {
+		            location.getAltars().remove(e.getBlock().getLocation());
+		        }
+			}
+		});
     }
 
     private void onBlockUse(PlayerRightClickEvent event) {
@@ -88,7 +117,12 @@ public class VoidAltar extends SlimefunItem {
         String data = BlockStorage.getLocationInfo(block.getLocation(), "dropped");
         if (data == null) return null;
         YamlConfiguration configuration = new YamlConfiguration();
-        configuration.loadFromString(data);
+        try {
+			configuration.loadFromString(data);
+		} catch (InvalidConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return configuration.getItemStack("item");
     }
 
@@ -129,25 +163,6 @@ public class VoidAltar extends SlimefunItem {
         return null;
     }
 
-    private boolean onBlockBreak(BlockBreakEvent event, ItemStack item, int fortune, List<ItemStack> drops) {
-        Item held = getItem(event.getBlock());
-        VoidPortal.VoidPortalData location = findPortal(event.getBlock().getLocation());
-        if (held != null) {
-            drops.add(new ItemStack(held.getItemStack().getType()));
-            held.remove();
-        }
-        if (location != null) {
-            location.getAltars().remove(event.getBlock().getLocation());
-        }
-        return true;
-    }
-
-    private boolean onBlockPlace(BlockPlaceEvent event, ItemStack item) {
-        if (findPortal(event.getBlock().getLocation()) == null)
-            event.getPlayer().sendMessage(ChatColor.RED + "You have to place this diagonal, horizontal, or vertical from a Void Portal to use it in a Void Ritual.");
-        return true;
-    }
-
     @Nullable
     private VoidPortal.VoidPortalData findPortal(Location location) {
         for (int i = 0; i < VoidPortal.X_OFFSETS.length; i++) {
@@ -161,7 +176,7 @@ public class VoidAltar extends SlimefunItem {
     private VoidPortal.VoidPortalData checkLocation(Location location, int x, int z) {
         Location newLocation = location.clone().add(x, 0, z);
         Block block = newLocation.getBlock();
-        if (block.getType().equals(Material.END_PORTAL_FRAME) && BlockStorage.check(newLocation, Items.VOID_PORTAL.getItemID())) {
+        if (block.getType().equals(Material.END_PORTAL_FRAME) && BlockStorage.check(newLocation, Items.VOID_PORTAL.getItemId())) {
             VoidPortal.VoidPortalData altarLocation = portal.getPortalData(newLocation);
             if (altarLocation == null) {
                 altarLocation = new VoidPortal.VoidPortalData(block.getLocation());
