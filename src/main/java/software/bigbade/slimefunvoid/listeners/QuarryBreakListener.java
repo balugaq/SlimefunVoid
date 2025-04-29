@@ -33,7 +33,7 @@ public class QuarryBreakListener implements Listener {
 
     private boolean checkQuarryLocation(PlacedVoidQuarry quarry, Location block) {
         Vector offset = block.toVector().subtract(Objects.requireNonNull(quarry.getBottomCorner()).toVector());
-        if (offset.getX() < 0 || offset.getX() > quarry.getSize().getX() || offset.getY() < 0 ||offset.getY() > quarry.getSize().getY() || offset.getZ() < 0 || offset.getZ() > quarry.getSize().getZ())
+        if (offset.getX() < 0 || offset.getX() > quarry.getSize().getX() || offset.getY() < 0 || offset.getY() > quarry.getSize().getY() || offset.getZ() < 0 || offset.getZ() > quarry.getSize().getZ())
             return false;
         //Not a side, but maybe a corner
         if (offset.getY() != 0 && offset.getY() != quarry.getSize().getY()) {

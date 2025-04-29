@@ -29,16 +29,11 @@ public enum VoidMessages {
                 player.sendMessage(ChatColor.RED + "The being was disgusted by your cowardice to speak up");
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1, 300));
             })),
-    WISE_MENTOR("A wise mentor gases upon you", "It seems to acknowledge, and accept your presence", new String[] { "Leave immediately", "Ask for tutoring", "Steal some knowledge", }, Arrays.asList(
+    WISE_MENTOR("A wise mentor gases upon you", "It seems to acknowledge, and accept your presence", new String[]{"Leave immediately", "Ask for tutoring", "Steal some knowledge",}, Arrays.asList(
 
     ));
-    VoidMessages(String name, String description, String[] items, List<Consumer<Player>> consumers) {
-		this.name = name;
-		this.description = description;
-		this.items = items;
-		this.consumers = consumers;
-    }
-	@Getter
+
+    @Getter
     private final String name;
     @Getter
     private final String description;

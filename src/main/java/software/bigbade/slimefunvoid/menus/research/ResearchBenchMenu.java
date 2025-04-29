@@ -1,7 +1,7 @@
 package software.bigbade.slimefunvoid.menus.research;
 
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -27,36 +27,41 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ResearchBenchMenu extends ChestMenu {
-    public static final ItemStack GREY_GLASS = new CustomItem(Material.GRAY_STAINED_GLASS_PANE, " ");
+    public static final ItemStack GREY_GLASS = new CustomItemStack(Material.GRAY_STAINED_GLASS_PANE, " ");
     public static final NamespacedKey RESEARCH_KEY = new NamespacedKey(SlimefunVoid.getInstance(), "void_research_bench");
 
     public static final NamespacedKey RESEARCH_START = new NamespacedKey(SlimefunVoid.getInstance(), "research_start");
-
+    private static final CustomItemStack NO_RESEARCH = new CustomItemStack(Material.PAPER, "&aCurrent Research:", ChatColor.WHITE + "None");
     private final CategorySelectMenu researchMenu = new CategorySelectMenu();
-
-    private static final CustomItem NO_RESEARCH = new CustomItem(Material.PAPER, "&aCurrent Research:", ChatColor.WHITE + "None");
-
     private final Map<UUID, Integer> runningTasks = new HashMap<>();
 
     public ResearchBenchMenu() {
-        super(SlimefunVoid.getInstance(), "&5Void Research Bench");
+        super("&5Void Research Bench");
         initMenu();
+    }
+
+    public static String getEnumName(String name) {
+        return ChatColor.stripColor(name.toUpperCase().replace(" ", "_"));
+    }
+
+    public static long getRemainingTime(long time, IVoidResearch research) {
+        return research.getResearchTime() - (System.currentTimeMillis() - time) / 1000;
     }
 
     private void initMenu() {
         for (int i = 0; i < 27; i++) {
             if (i > 9 && i < 17 && i % 2 == 1)
                 continue;
-            addItem(i, GREY_GLASS, (player, slot, item, cursor, action) -> false);
+            addItem(i, GREY_GLASS, (player, slot, item, action) -> false);
         }
 
-        addItem(11, new CustomItem(Material.PAPER, ChatColor.GREEN + "Select Void Research"), (player, slot, item, cursor, action) -> {
+        addItem(11, new CustomItemStack(Material.PAPER, ChatColor.GREEN + "Select Void Research"), (player, slot, item, action) -> {
             researchMenu.open(player);
             return false;
         });
 
-        addItem(15, new CustomItem(Material.BARRIER, ChatColor.GREEN + "Put Researches here"), (player, slot, item, cursor, action) -> {
-            if (addResearchNotes(player, cursor))
+        addItem(15, new CustomItemStack(Material.BARRIER, ChatColor.GREEN + "Put Researches here"), (player, slot, item, action) -> {
+            if (addResearchNotes(player, player.getItemOnCursor()))
                 player.setItemOnCursor(null);
             return false;
         });
@@ -87,7 +92,7 @@ public class ResearchBenchMenu extends ChestMenu {
                 addResearch(player, research, false);
                 researchItem = NO_RESEARCH;
             } else {
-                researchItem = new CustomItem(Material.PAPER, "&aCurrent Research:", category.getColor() + researchName, ChatColor.WHITE.toString() + timeRemaining + "s");
+                researchItem = new CustomItemStack(Material.PAPER, "&aCurrent Research:", category.getColor() + researchName, ChatColor.WHITE.toString() + timeRemaining + "s");
                 runningTasks.put(player.getUniqueId(), Bukkit.getScheduler().scheduleSyncRepeatingTask(SlimefunVoid.getInstance(), () -> {
                     ItemStack running = getItemInSlot(13);
                     ItemMeta meta = running.getItemMeta();
@@ -157,13 +162,5 @@ public class ResearchBenchMenu extends ChestMenu {
             player.sendMessage(ChatColor.RED + "You do not understand the notes.");
         }
         return false;
-    }
-
-    public static String getEnumName(String name) {
-        return ChatColor.stripColor(name.toUpperCase().replace(" ", "_"));
-    }
-
-    public static long getRemainingTime(long time, IVoidResearch research) {
-        return research.getResearchTime() - (System.currentTimeMillis() - time) / 1000;
     }
 }

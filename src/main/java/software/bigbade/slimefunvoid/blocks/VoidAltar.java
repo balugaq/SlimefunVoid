@@ -1,10 +1,16 @@
 package software.bigbade.slimefunvoid.blocks;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
+import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.ItemUtils;
+import lombok.SneakyThrows;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -21,25 +27,17 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-
-import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
-import lombok.SneakyThrows;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.utils.RecipeItems;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public class VoidAltar extends SlimefunItem {
     private final VoidPortal portal;
 
-    public VoidAltar(Category category, VoidPortal portal) {
+    public VoidAltar(ItemGroup category, VoidPortal portal) {
         super(category, Items.VOID_ALTAR, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{RecipeItems.END_STONE, RecipeItems.END_STONE, RecipeItems.END_STONE,
                 RecipeItems.END_STONE, RecipeItems.OBSIDIAN, RecipeItems.END_STONE,
                 RecipeItems.END_STONE, RecipeItems.END_STONE, RecipeItems.END_STONE});
@@ -50,36 +48,94 @@ public class VoidAltar extends SlimefunItem {
         addItemHandler(blockUseHandler);
 
         addItemHandler(new BlockPlaceHandler(true) {
-			
-			@Override
-			public void onPlayerPlace(BlockPlaceEvent e) {
-		        Item held = getItem(e.getBlock());
-		        VoidPortal.VoidPortalData location = findPortal(e.getBlock().getLocation());
-		        if (held != null) {
-		        	dropItem(e.getPlayer(), new ItemStack(held.getItemStack().getType()), e.getBlock());
-		            held.remove();
-		        }
-		        if (location != null) {
-		            location.getAltars().remove(e.getBlock().getLocation());
-		        }
-			}
-		});
+
+            @Override
+            public void onPlayerPlace(BlockPlaceEvent e) {
+                Item held = getItem(e.getBlock());
+                VoidPortal.VoidPortalData location = findPortal(e.getBlock().getLocation());
+                if (held != null) {
+                    dropItem(e.getPlayer(), new ItemStack(held.getItemStack().getType()), e.getBlock());
+                    held.remove();
+                }
+                if (location != null) {
+                    location.getAltars().remove(e.getBlock().getLocation());
+                }
+            }
+        });
 
         addItemHandler(new BlockBreakHandler(false, false) {
-			
-			@Override
-			public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
-		        Item held = getItem(e.getBlock());
-		        VoidPortal.VoidPortalData location = findPortal(e.getBlock().getLocation());
-		        if (held != null) {
-		            drops.add(new ItemStack(held.getItemStack().getType()));
-		            held.remove();
-		        }
-		        if (location != null) {
-		            location.getAltars().remove(e.getBlock().getLocation());
-		        }
-			}
-		});
+
+            @Override
+            public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
+                Item held = getItem(e.getBlock());
+                VoidPortal.VoidPortalData location = findPortal(e.getBlock().getLocation());
+                if (held != null) {
+                    drops.add(new ItemStack(held.getItemStack().getType()));
+                    held.remove();
+                }
+                if (location != null) {
+                    location.getAltars().remove(e.getBlock().getLocation());
+                }
+            }
+        });
+    }
+
+    @SneakyThrows
+    @Nullable
+    public static ItemStack getStoredItem(Block block) {
+        String data = BlockStorage.getLocationInfo(block.getLocation(), "dropped");
+        if (data == null) return null;
+        YamlConfiguration configuration = new YamlConfiguration();
+        try {
+            configuration.loadFromString(data);
+        } catch (InvalidConfigurationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return configuration.getItemStack("item");
+    }
+
+    public static Block prepareMenuOpen(PlayerRightClickEvent event) {
+        event.setUseBlock(Event.Result.DENY);
+        event.setUseItem(Event.Result.DENY);
+        Optional<Block> clicked = event.getClickedBlock();
+        return clicked.orElse(null);
+    }
+
+    public static void dropItem(Player player, ItemStack item, Block block) {
+        ItemStack stack = new ItemStack(item);
+        stack.setAmount(1);
+
+        if (player.getGameMode() != GameMode.CREATIVE) {
+            ItemUtils.consumeItem(item, false);
+        }
+
+        String nametag = ItemUtils.getItemName(stack);
+        CustomItemStack dropped = new CustomItemStack(stack, "VoidItem - " + System.currentTimeMillis());
+        storeItem(stack, block);
+        Item entity = block.getWorld().dropItem(block.getLocation().add(0.5, 1.2, 0.5), dropped);
+        entity.setInvulnerable(true);
+        entity.setVelocity(new Vector(0, 0.1, 0));
+        entity.setPickupDelay(32767);
+        entity.setTicksLived(Integer.MAX_VALUE);
+        entity.setCustomNameVisible(true);
+        entity.setCustomName(nametag);
+        player.playSound(block.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.3F, 0.3F);
+    }
+
+    @Nullable
+    public static Item getItem(Block block) {
+        for (Entity entity : block.getChunk().getEntities()) {
+            if (entity instanceof Item && block.getLocation().add(0.5, 1.2, 0.5).distanceSquared(entity.getLocation()) < 0.5D && entity.getCustomName() != null)
+                return (Item) entity;
+        }
+        return null;
+    }
+
+    public static void storeItem(ItemStack item, Block block) {
+        YamlConfiguration configuration = new YamlConfiguration();
+        configuration.set("item", item);
+        BlockStorage.addBlockInfo(block, "dropped", configuration.saveToString());
     }
 
     private void onBlockUse(PlayerRightClickEvent event) {
@@ -111,58 +167,6 @@ public class VoidAltar extends SlimefunItem {
         }
     }
 
-    @SneakyThrows
-    @Nullable
-    public static ItemStack getStoredItem(Block block) {
-        String data = BlockStorage.getLocationInfo(block.getLocation(), "dropped");
-        if (data == null) return null;
-        YamlConfiguration configuration = new YamlConfiguration();
-        try {
-			configuration.loadFromString(data);
-		} catch (InvalidConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        return configuration.getItemStack("item");
-    }
-
-    public static Block prepareMenuOpen(PlayerRightClickEvent event) {
-        event.setUseBlock(Event.Result.DENY);
-        event.setUseItem(Event.Result.DENY);
-        Optional<Block> clicked = event.getClickedBlock();
-        return clicked.orElse(null);
-    }
-
-    public static void dropItem(Player player, ItemStack item, Block block) {
-        ItemStack stack = new ItemStack(item);
-        stack.setAmount(1);
-
-        if (player.getGameMode() != GameMode.CREATIVE) {
-            ItemUtils.consumeItem(item, false);
-        }
-
-        String nametag = ItemUtils.getItemName(stack);
-        CustomItem dropped = new CustomItem(stack, "VoidItem - " + System.currentTimeMillis());
-        storeItem(stack, block);
-        Item entity = block.getWorld().dropItem(block.getLocation().add(0.5, 1.2, 0.5), dropped);
-        entity.setInvulnerable(true);
-        entity.setVelocity(new Vector(0, 0.1, 0));
-        entity.setPickupDelay(32767);
-        entity.setTicksLived(Integer.MAX_VALUE);
-        entity.setCustomNameVisible(true);
-        entity.setCustomName(nametag);
-        player.playSound(block.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.3F, 0.3F);
-    }
-
-    @Nullable
-    public static Item getItem(Block block) {
-        for (Entity entity : block.getChunk().getEntities()) {
-            if (entity instanceof Item && block.getLocation().add(0.5, 1.2, 0.5).distanceSquared(entity.getLocation()) < 0.5D && entity.getCustomName() != null)
-                return (Item) entity;
-        }
-        return null;
-    }
-
     @Nullable
     private VoidPortal.VoidPortalData findPortal(Location location) {
         for (int i = 0; i < VoidPortal.X_OFFSETS.length; i++) {
@@ -188,11 +192,5 @@ public class VoidAltar extends SlimefunItem {
             return altarLocation;
         }
         return null;
-    }
-
-    public static void storeItem(ItemStack item, Block block) {
-        YamlConfiguration configuration = new YamlConfiguration();
-        configuration.set("item", item);
-        BlockStorage.addBlockInfo(block, "dropped", configuration.saveToString());
     }
 }

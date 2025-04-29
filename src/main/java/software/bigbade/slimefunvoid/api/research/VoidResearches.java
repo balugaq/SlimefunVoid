@@ -15,11 +15,7 @@ public enum VoidResearches {
     ADVANCED_WIZARDRY(3, new VoidResearch("Advanced Wizardry", 500, Researches.ADVANCED_WAND.getResearch(), "A refined wand, allowing for advanced spells")),
     SPECIALIZATION(3, new VoidResearch("Specialization", 500, "Specializing into a certain element", "allows for improved spell power", "Unlocks: &5Advanced Wand"));
 
-    VoidResearches(int categoryID, IVoidResearch research) {
-		this.categoryID = categoryID;
-		this.research = research;
-	}
-	@Getter
+    @Getter
     private final int categoryID;
     @Getter
     private final IVoidResearch research;

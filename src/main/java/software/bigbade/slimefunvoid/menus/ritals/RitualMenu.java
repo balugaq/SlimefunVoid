@@ -1,8 +1,8 @@
 package software.bigbade.slimefunvoid.menus.ritals;
 
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.FluidCollisionMode;
@@ -29,31 +29,37 @@ import java.util.Objects;
 
 public class RitualMenu extends ChestMenu {
 
+    private static final CustomItemStack wandItem = new CustomItemStack(Material.STICK, ChatColor.GREEN + "Put a wand here");
+    private static final int[] RECIPE_ITEMS = new int[]{0, 1, 2, 3, 5, 6, 7, 8};
     private final RitualRecipeMenu recipeMenu = new RitualRecipeMenu();
 
-    private static final CustomItem wandItem = new CustomItem(Material.STICK, ChatColor.GREEN + "Put a wand here");
-
-    private static final int[] RECIPE_ITEMS = new int[]{0, 1, 2, 3, 5, 6, 7, 8};
-
     public RitualMenu() {
-        super(SlimefunVoid.getInstance(), "&5Insert a Wand");
+        super("&5Insert a Wand");
 
         for (int i = 0; i < 27; i++) {
             if (i > 10 && i < 16 && i % 2 == 1)
                 continue;
-            addItem(i, VoidMenu.PURPLE_GLASS, (player, slot, item, cursor, action) -> false);
+            addItem(i, VoidMenu.PURPLE_GLASS, (player, slot, item, action) -> false);
         }
 
-        addItem(11, new CustomItem(Material.BOOK, ChatColor.GREEN + "View Recipes"), (player, slot, item, cursor, action) -> {
+        addItem(11, new CustomItemStack(Material.BOOK, ChatColor.GREEN + "View Recipes"), (player, slot, item, action) -> {
             recipeMenu.open(player);
             return false;
         });
 
-        addItem(13, wandItem, (player, slot, item, cursor, action) -> setWand(cursor, item, player));
+        addItem(13, wandItem, (player, slot, item, action) -> setWand(player.getItemOnCursor(), item, player));
 
-        addItem(15, new CustomItem(Material.END_PORTAL_FRAME, ChatColor.DARK_PURPLE + "Start the Ritual"), (player, slot, item, cursor, action) -> checkRitual(player));
+        addItem(15, new CustomItemStack(Material.END_PORTAL_FRAME, ChatColor.DARK_PURPLE + "Start the Ritual"), (player, slot, item, action) -> checkRitual(player));
 
-        setSize(27);
+        addItem(26, new ItemStack(Material.AIR));
+    }
+
+    public static Elements isElementItem(ItemStack item) {
+        for (Elements element : Elements.values())
+            if (element.getItems().contains(item.getType())) {
+                return element;
+            }
+        return null;
     }
 
     private boolean setWand(ItemStack cursor, ItemStack item, Player player) {
@@ -81,7 +87,7 @@ public class RitualMenu extends ChestMenu {
                     replaceExistingItem(13, wandItem), 1L);
             BlockStorage.addBlockInfo(altar, "dropped", null);
             Item droppedItem = VoidAltar.getItem(altar);
-            if(droppedItem != null) {
+            if (droppedItem != null) {
                 droppedItem.remove();
             }
             return true;
@@ -112,7 +118,7 @@ public class RitualMenu extends ChestMenu {
             if (!checkWandIngredients(ingredients, output))
                 output = null;
         }
-        if(output == null) {
+        if (output == null) {
             for (ItemStack foundOutput : VoidRecipes.getRecipes().keySet()) {
                 ItemStack[] items = VoidRecipes.getRecipes().get(foundOutput);
                 if (isArrayEqual(ingredients, items)) {
@@ -142,7 +148,7 @@ public class RitualMenu extends ChestMenu {
     private boolean checkWandIngredients(ItemStack[] items, ItemStack wand) {
         Map<Elements, Integer> elements = new EnumMap<>(Elements.class);
         for (int i : RECIPE_ITEMS) {
-            if(items[i] == null)
+            if (items[i] == null)
                 continue;
             Elements element = isElementItem(items[i]);
             if (element == null)
@@ -151,18 +157,10 @@ public class RitualMenu extends ChestMenu {
                 elements.compute(element, (current, amount) -> amount == null ? 10 : amount + 10);
             }
         }
-        for(Map.Entry<Elements, Integer> elementEntry : elements.entrySet()) {
+        for (Map.Entry<Elements, Integer> elementEntry : elements.entrySet()) {
             WandItem.chargeItem(wand, elementEntry.getKey(), elementEntry.getValue());
         }
         return true;
-    }
-
-    public static Elements isElementItem(ItemStack item) {
-        for (Elements element : Elements.values())
-            if (element.getItems().contains(item.getType())) {
-                return element;
-            }
-        return null;
     }
 
     private boolean isArrayEqual(ItemStack[] target, ItemStack[] checking) {

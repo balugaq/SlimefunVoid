@@ -18,12 +18,12 @@ public class ResearchCmd implements CommandExecutor {
         if (args.length != 3) {
             return false;
         }
-        if(!commandSender.isOp() && !commandSender.hasPermission("slimevoid.research")) {
+        if (!commandSender.isOp() && !commandSender.hasPermission("slimevoid.research")) {
             commandSender.sendMessage(ChatColor.RED + "You do not have permission to run this command!");
             return true;
         }
         boolean adding = args[0].equals("add");
-        if(!adding && !args[0].equals("remove")) {
+        if (!adding && !args[0].equals("remove")) {
             return false;
         }
         Player target = Bukkit.getPlayer(args[1]);
@@ -38,7 +38,7 @@ public class ResearchCmd implements CommandExecutor {
             commandSender.sendMessage(ChatColor.RED + "Research " + args[2] + " does not exist!");
             return true;
         }
-        if(adding) {
+        if (adding) {
             VoidResearchHelper.addResearch(target, researches);
             commandSender.sendMessage(ChatColor.GREEN + "Successfully added research");
         }

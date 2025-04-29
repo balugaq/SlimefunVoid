@@ -7,7 +7,7 @@ import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.utils.RecipeItems;
 
 public class BasicWand extends WandItem {
-    public BasicWand(Category category) {
+    public BasicWand(ItemGroup category) {
         super(category, Items.BASIC_WAND, VoidRecipes.VOID_ALTAR, new ItemStack[]{
                 RecipeItems.OBSIDIAN, RecipeItems.ENDER_EYE, RecipeItems.OBSIDIAN,
                 RecipeItems.ENDER_EYE, null, RecipeItems.ENDER_EYE,

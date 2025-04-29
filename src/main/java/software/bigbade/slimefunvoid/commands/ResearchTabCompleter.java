@@ -16,15 +16,15 @@ import java.util.List;
 public class ResearchTabCompleter implements TabCompleter {
     @Override
     public List<String> onTabComplete(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
-        if(args.length == 1) {
-            if("add".startsWith(args[0])) {
+        if (args.length == 1) {
+            if ("add".startsWith(args[0])) {
                 return Collections.singletonList("add");
-            } else if("remove".startsWith(args[0])) {
+            } else if ("remove".startsWith(args[0])) {
                 return Collections.singletonList("remove");
             }
-        } else if(args.length == 2) {
+        } else if (args.length == 2) {
             return getPlayers(args[1]);
-        } else if(args.length == 3) {
+        } else if (args.length == 3) {
             return getResearches(args[2]);
         }
         return Collections.emptyList();
@@ -32,11 +32,11 @@ public class ResearchTabCompleter implements TabCompleter {
 
     private List<String> getResearches(String arg) {
         List<String> researches = new ArrayList<>();
-        for(VoidResearches research : VoidResearches.values()) {
+        for (VoidResearches research : VoidResearches.values()) {
             String name = ChatColor.stripColor(research.getResearch().getName()).replace(" ", "_");
-            if(name.startsWith(arg)) {
+            if (name.startsWith(arg)) {
                 researches.add(name);
-                if(researches.size() > 10)
+                if (researches.size() > 10)
                     break;
             }
         }
@@ -45,10 +45,10 @@ public class ResearchTabCompleter implements TabCompleter {
 
     private List<String> getPlayers(String arg) {
         List<String> players = new ArrayList<>();
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            if(player.getName().startsWith(arg)) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getName().startsWith(arg)) {
                 players.add(player.getName());
-                if(players.size() > 10)
+                if (players.size() > 10)
                     break;
             }
         }

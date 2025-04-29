@@ -17,11 +17,15 @@ public class LaunchSpell extends BasicSpell {
         super(Researches.LAUNCH_SPELL.getResearch(), Elements.WIND, Items.LAUNCH_SPELL, 6);
     }
 
+    public static Vector getVelocity(ItemStack wand) {
+        return new Vector(0, getMultipliedDamage(wand, 1.5f, Elements.WIND), 0);
+    }
+
     @Override
     public boolean onCast(Player player, ItemStack wand) {
         float distance = getMultipliedDamage(wand, 20, Elements.WIND);
-        for(Entity entity : player.getNearbyEntities(distance, 5, distance)) {
-            if(entity instanceof LivingEntity && SwapSpell.getLookingAt(player, entity)) {
+        for (Entity entity : player.getNearbyEntities(distance, 5, distance)) {
+            if (entity instanceof LivingEntity && SwapSpell.getLookingAt(player, entity)) {
                 entity.setVelocity(entity.getVelocity().add(getVelocity(wand)));
                 return true;
             }
@@ -33,9 +37,5 @@ public class LaunchSpell extends BasicSpell {
     @Override
     public void onBackfire(Player player, ItemStack wand) {
         player.setVelocity(player.getVelocity().add(getVelocity(wand)));
-    }
-
-    public static Vector getVelocity(ItemStack wand) {
-        return new Vector(0, getMultipliedDamage(wand, 1.5f, Elements.WIND), 0);
     }
 }

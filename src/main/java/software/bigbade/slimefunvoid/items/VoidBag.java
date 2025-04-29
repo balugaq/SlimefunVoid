@@ -1,11 +1,11 @@
 package software.bigbade.slimefunvoid.items;
 
-import lombok.Getter;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.interfaces.NotPlaceable;
-import me.mrCookieSlime.Slimefun.Objects.handlers.ItemUseHandler;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.attributes.NotPlaceable;
+import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
+import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.FluidCollisionMode;
@@ -36,10 +36,17 @@ public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> implements NotPl
     @Getter
     private final Set<UUID> openBags = new HashSet<>();
 
-    public VoidBag(Category category) {
+    public VoidBag(ItemGroup category) {
         super(category, Items.VOID_BAG, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{RecipeItems.OBSIDIAN, RecipeItems.ENDER_EYE, RecipeItems.OBSIDIAN,
                 RecipeItems.OBSIDIAN, RecipeItems.ENDER_CHEST, RecipeItems.OBSIDIAN,
                 RecipeItems.OBSIDIAN, RecipeItems.OBSIDIAN, RecipeItems.OBSIDIAN});
+    }
+
+    public static Block deserializeBlock(String data) {
+        String[] split = data.split("\\|");
+        World world = Bukkit.getWorld(split[0]);
+        Location location = new Location(world, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
+        return location.getBlock();
     }
 
     @Override
@@ -71,7 +78,7 @@ public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> implements NotPl
         Objects.requireNonNull(loc.getWorld());
         data.set(BAG_LOCATION, PersistentDataType.STRING, loc.getWorld().getName() + "|" + loc.getX() + "|" + loc.getY() + "|" + loc.getZ());
         player.sendMessage(ChatColor.GREEN + "Set bag location!");
-}
+    }
 
     private void openBag(PersistentDataContainer data, Player player) {
         String stringLocation = data.get(BAG_LOCATION, PersistentDataType.STRING);
@@ -85,12 +92,5 @@ public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> implements NotPl
             data.remove(BAG_LOCATION);
             player.sendMessage(ChatColor.RED + "Invalid bag location! Target chest might of been broken.");
         }
-    }
-
-    public static Block deserializeBlock(String data) {
-        String[] split = data.split("\\|");
-        World world = Bukkit.getWorld(split[0]);
-        Location location = new Location(world, Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]));
-        return location.getBlock();
     }
 }

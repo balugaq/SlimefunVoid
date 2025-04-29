@@ -39,7 +39,7 @@ public class LightningSpell extends BasicSpell {
         Objects.requireNonNull(location.getWorld());
         SelfCancelableTask task = new SelfCancelableTask();
         task.setRunnable(() -> {
-            if(amount == task.getLoops()) {
+            if (amount == task.getLoops()) {
                 task.cancel();
                 return;
             }

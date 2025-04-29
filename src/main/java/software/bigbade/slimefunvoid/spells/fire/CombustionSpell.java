@@ -19,8 +19,8 @@ public class CombustionSpell extends BasicSpell {
     @Override
     public boolean onCast(Player player, ItemStack wand) {
         float distance = getMultipliedDamage(wand, 20, Elements.FIRE);
-        for(Entity entity : player.getNearbyEntities(distance, 5, distance)) {
-            if(entity instanceof LivingEntity && SwapSpell.getLookingAt(player, entity)) {
+        for (Entity entity : player.getNearbyEntities(distance, 5, distance)) {
+            if (entity instanceof LivingEntity && SwapSpell.getLookingAt(player, entity)) {
                 igniteEntity((LivingEntity) entity, wand);
                 return true;
             }
@@ -35,6 +35,6 @@ public class CombustionSpell extends BasicSpell {
     }
 
     private void igniteEntity(LivingEntity entity, ItemStack wand) {
-        entity.setFireTicks(((int) getBackfireDamage(wand, 4, Elements.FIRE))*20);
+        entity.setFireTicks(((int) getBackfireDamage(wand, 4, Elements.FIRE)) * 20);
     }
 }

@@ -11,10 +11,11 @@ import software.bigbade.slimefunvoid.api.research.VoidResearches;
 import java.util.Objects;
 
 public class VoidResearchHelper {
-    //Private constructor to hide implicit public one
-    private VoidResearchHelper() { }
-
     public static final NamespacedKey RESEARCHED = new NamespacedKey(SlimefunVoid.getInstance(), "researched_void");
+
+    //Private constructor to hide implicit public one
+    private VoidResearchHelper() {
+    }
 
     public static int getResearched(Player player, IResearchCategory category) {
         PersistentDataContainer data = player.getPersistentDataContainer();
@@ -35,7 +36,7 @@ public class VoidResearchHelper {
             int[] researchData = data.get(RESEARCHED, PersistentDataType.INTEGER_ARRAY);
             Objects.requireNonNull(researchData);
             if (researchData.length >= researches.getCategoryID()) {
-                researchData[researches.getCategoryID()-1] += 1;
+                researchData[researches.getCategoryID() - 1] += 1;
             } else {
                 int[] newData = new int[researchData.length];
                 System.arraycopy(researchData, 0, newData, 0, researchData.length - 1);

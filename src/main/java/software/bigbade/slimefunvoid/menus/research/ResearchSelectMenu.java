@@ -1,10 +1,11 @@
 package software.bigbade.slimefunvoid.menus.research;
 
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import software.bigbade.slimefunvoid.SlimefunVoid;
@@ -16,16 +17,16 @@ import javax.annotation.Nonnull;
 
 public class ResearchSelectMenu extends ChestMenu {
     public ResearchSelectMenu() {
-        super(SlimefunVoid.getInstance(), "&5Select a Research");
+        super("&5Select a Research");
     }
 
     private void init(IResearchCategory category) {
-        setSize(getSize(category.getResearches().size()));
+        addItem(Math.min(53, getSize(category.getResearches().size()) - 1), new ItemStack(Material.AIR));
 
-        for(int i = 0; i < category.getResearches().size(); i++) {
-            addMenuClickHandler(i, (player, slot, item, cursor, action) -> {
+        for (int i = 0; i < category.getResearches().size(); i++) {
+            addMenuClickHandler(i, (player, slot, item, action) -> {
                 PersistentDataContainer data = player.getPersistentDataContainer();
-                if(!data.has(ResearchBenchMenu.RESEARCH_KEY, PersistentDataType.STRING)) {
+                if (!data.has(ResearchBenchMenu.RESEARCH_KEY, PersistentDataType.STRING)) {
                     addResearch(slot, category, player);
                 } else {
                     player.sendMessage(ChatColor.RED + "You are already researching " + data.get(ResearchBenchMenu.RESEARCH_KEY, PersistentDataType.STRING));
@@ -42,10 +43,10 @@ public class ResearchSelectMenu extends ChestMenu {
         for (int i = 0; i < category.getResearches().size(); i++) {
             IVoidResearch research = category.getResearches().get(i);
             if (researched < i) {
-                replaceExistingItem(i, new CustomItem(Material.PAPER, ChatColor.RED + ChatColor.stripColor(research.getName())));
+                replaceExistingItem(i, new CustomItemStack(Material.PAPER, ChatColor.RED + ChatColor.stripColor(research.getName())));
                 continue;
             }
-            replaceExistingItem(i, new CustomItem(Material.PAPER, category.getColor() + research.getName(), research.getLore()));
+            replaceExistingItem(i, new CustomItemStack(Material.PAPER, category.getColor() + research.getName(), research.getLore()));
         }
     }
 
@@ -67,6 +68,7 @@ public class ResearchSelectMenu extends ChestMenu {
 
     /**
      * Uses the properties of integers to find the size needed for an inventory
+     *
      * @param researches number of researches
      * @return number of rows needed
      */

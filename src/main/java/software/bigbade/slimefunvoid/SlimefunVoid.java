@@ -4,7 +4,6 @@ import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import lombok.Getter;
-import me.mrCookieSlime.bstats.bukkit.Metrics;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,11 +21,17 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
     @Getter
     private ItemManager itemManager;
 
+    public static SlimefunVoid getInstance() {
+        return instance;
+    }
+
+    private static void setInstance(SlimefunVoid instance) {
+        SlimefunVoid.instance = instance;
+    }
+
     @Override
     public void onEnable() {
         setInstance(this);
-
-        new Metrics(this, 6993);
 
         ItemGroup category = new ItemGroup(new NamespacedKey(this, "slimevoid_category"), new CustomItemStack(Material.ENDER_EYE, "&5SlimeVoid"));
         category.register(this);
@@ -34,14 +39,10 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
         Objects.requireNonNull(getCommand("svresearch")).setExecutor(new ResearchCmd());
         Objects.requireNonNull(getCommand("svresearch")).setTabCompleter(new ResearchTabCompleter());
 
-        itemManager = new ItemManager();
+        itemManager = new ItemManager(category);
         itemManager.registerItems();
 
-        new ListenerManager().registerListeners();
-    }
-
-    private static void setInstance(SlimefunVoid instance) {
-        SlimefunVoid.instance = instance;
+        new ListenerManager(this).registerListeners();
     }
 
     @Override
@@ -53,6 +54,4 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
     public String getBugTrackerURL() {
         return "https://github.com/BigBadE/SlimefunVoid/issues";
     }
-
-    public static SlimefunVoid getInstance() { return instance; }
 }

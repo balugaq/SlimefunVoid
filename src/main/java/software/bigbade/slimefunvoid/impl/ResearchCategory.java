@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResearchCategory implements IResearchCategory {
+    private static int nextID = 1;
     @Getter
     private final String name;
     @Getter
@@ -18,8 +19,6 @@ public class ResearchCategory implements IResearchCategory {
     private final List<IVoidResearch> researches = new ArrayList<>();
     @Getter
     private final int id;
-
-    private static int nextID = 1;
 
     public ResearchCategory(String name, ChatColor color, VoidResearches... researches) {
         this.name = ChatColor.translateAlternateColorCodes('&', name);

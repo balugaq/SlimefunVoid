@@ -36,10 +36,6 @@ public enum Spells {
     ICE_SHIELD(new IceShieldSpell()),
     TREE_TRAP(new TreeTrapSpell());
 
-    Spells(WandSpell spell) {
-		this.spell = spell;
-	}
-
-	@Getter
+    @Getter
     private final WandSpell spell;
 }
