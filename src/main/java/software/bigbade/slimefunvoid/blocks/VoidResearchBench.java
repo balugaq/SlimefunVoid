@@ -1,9 +1,7 @@
 package software.bigbade.slimefunvoid.blocks;
 
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockUseHandler;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import software.bigbade.slimefunvoid.items.Items;

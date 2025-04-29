@@ -1,9 +1,9 @@
 package software.bigbade.slimefunvoid;
 
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import lombok.Getter;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.bstats.bukkit.Metrics;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -28,7 +28,7 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
 
         new Metrics(this, 6993);
 
-        Category category = new Category(new NamespacedKey(this, "slimevoid_category"), new CustomItem(Material.ENDER_EYE, "&5SlimeVoid"));
+        ItemGroup category = new ItemGroup(new NamespacedKey(this, "slimevoid_category"), new CustomItemStack(Material.ENDER_EYE, "&5SlimeVoid"));
         category.register(this);
 
         Objects.requireNonNull(getCommand("svresearch")).setExecutor(new ResearchCmd());
