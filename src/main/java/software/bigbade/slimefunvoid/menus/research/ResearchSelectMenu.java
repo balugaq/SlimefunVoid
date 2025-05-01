@@ -29,7 +29,7 @@ public class ResearchSelectMenu extends ChestMenu {
                 if (!data.has(ResearchBenchMenu.RESEARCH_KEY, PersistentDataType.STRING)) {
                     addResearch(slot, category, player);
                 } else {
-                    player.sendMessage(ChatColor.RED + "You are already researching " + data.get(ResearchBenchMenu.RESEARCH_KEY, PersistentDataType.STRING));
+                    player.sendMessage(ChatColor.RED + "你已经在研究 " + data.get(ResearchBenchMenu.RESEARCH_KEY, PersistentDataType.STRING));
                 }
                 return false;
             });
@@ -57,12 +57,12 @@ public class ResearchSelectMenu extends ChestMenu {
         if (found == slot) {
             data.set(ResearchBenchMenu.RESEARCH_KEY, PersistentDataType.STRING, research.getName());
             data.set(ResearchBenchMenu.RESEARCH_START, PersistentDataType.LONG, System.currentTimeMillis());
-            player.sendMessage(ChatColor.GREEN + "Researching " + research.getName());
+            player.sendMessage(ChatColor.GREEN + "正在研究 " + research.getName());
             player.closeInventory();
         } else if (found > slot) {
-            player.sendMessage(ChatColor.RED + "You have already researched " + research.getName());
+            player.sendMessage(ChatColor.RED + "你已经研究过了 " + research.getName());
         } else {
-            player.sendMessage(ChatColor.RED + "You aren't practiced enough to research " + research.getName());
+            player.sendMessage(ChatColor.RED + "你没有足够的实践来研究 " + research.getName());
         }
     }
 

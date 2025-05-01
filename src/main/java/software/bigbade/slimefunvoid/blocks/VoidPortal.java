@@ -74,7 +74,7 @@ public class VoidPortal extends SlimefunItem {
                     return;
                 }
                 if (data.getAltars().size() > 0) {
-                    e.getPlayer().sendMessage(ChatColor.RED + "You must break all altars before you break the portal.");
+                    e.getPlayer().sendMessage(ChatColor.RED + "在你打破传送门之前，你必须打破所有的祭坛。");
                     e.setCancelled(true);
                 }
 
@@ -103,7 +103,7 @@ public class VoidPortal extends SlimefunItem {
             menu.addItem(i, VoidMenu.PURPLE_GLASS, (player, slot, item, action) -> false);
         }
 
-        menu.addItem(12, new CustomItemStack(Material.END_PORTAL_FRAME, ChatColor.GREEN + "Enter The Void"), (player, slot, item, action) -> {
+        menu.addItem(12, new CustomItemStack(Material.END_PORTAL_FRAME, ChatColor.GREEN + "进入虚空"), (player, slot, item, action) -> {
             PersistentDataContainer data = player.getPersistentDataContainer();
             if (data.has(VoidMenu.VOID_COOLDOWN, PersistentDataType.LONG)) {
                 Long start = data.get(VoidMenu.VOID_COOLDOWN, PersistentDataType.LONG);
@@ -112,14 +112,14 @@ public class VoidPortal extends SlimefunItem {
                 if (cooldown < 0)
                     voidMenu.open(player);
                 else
-                    player.sendMessage(ChatColor.RED + "You cannot enter the void for " + cooldown + " more seconds!");
+                    player.sendMessage(ChatColor.RED + "你需要等待 " + cooldown + " 秒!");
                 return false;
             }
             voidMenu.open(player);
             return false;
         });
 
-        menu.addItem(14, new CustomItemStack(Material.STICK, ChatColor.GREEN + "Conduct a Ritual"), (player, slot, item, action) -> {
+        menu.addItem(14, new CustomItemStack(Material.STICK, ChatColor.GREEN + "举行仪式"), (player, slot, item, action) -> {
             Block altar = player.getTargetBlockExact(7, FluidCollisionMode.NEVER);
             if (altar == null || !altar.getType().equals(Material.END_PORTAL_FRAME)) {
                 return false;
@@ -138,7 +138,7 @@ public class VoidPortal extends SlimefunItem {
             Objects.requireNonNull(start);
             long cooldown = getCooldownTime(start, 300);
             if (cooldown > 0) {
-                menu.replaceExistingItem(12, new CustomItemStack(Material.END_PORTAL_FRAME, ChatColor.GREEN + "Enter The Void " + ChatColor.WHITE + "(" + cooldown + "s)"));
+                menu.replaceExistingItem(12, new CustomItemStack(Material.END_PORTAL_FRAME, ChatColor.GREEN + "进入虚空 " + ChatColor.WHITE + "(" + cooldown + "s)"));
             }
         }
     }

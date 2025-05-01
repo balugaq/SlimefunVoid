@@ -146,7 +146,7 @@ public class VoidAltar extends SlimefunItem {
         Item item = getItem(block);
         VoidPortal.VoidPortalData location = findPortal(block.getLocation());
         if (location == null) {
-            player.sendMessage("This altar is corrupted!");
+            player.sendMessage("这个祭坛被腐蚀了!");
             return;
         }
         if (location.isInUse())
@@ -160,7 +160,7 @@ public class VoidAltar extends SlimefunItem {
         } else {
             ItemStack heldItem = player.getInventory().getItemInMainHand();
             if (heldItem.getType() == Material.AIR) {
-                player.sendMessage(ChatColor.RED + "You have to hold an item to put on the altar");
+                player.sendMessage(ChatColor.RED + "你必须拿着一件物品放在祭坛上");
                 return;
             }
             dropItem(player, player.getInventory().getItemInMainHand(), block);

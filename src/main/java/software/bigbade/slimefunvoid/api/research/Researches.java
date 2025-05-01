@@ -9,27 +9,27 @@ import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.utils.ResearchIDHandler;
 
 public enum Researches {
-    VOID_BENCH("Void Research Bench", 30, Items.VOID_RESEARCH_BENCH),
-    VOID_BAG("Void Bag", 10, Items.VOID_BAG),
-    VOID_PORTAL("Void Portal", 30, Items.VOID_PORTAL),
-    VOID_ALTAR("Void Altar", 15, Items.VOID_ALTAR),
-    BASIC_WAND("Basic Wand", 20, Items.BASIC_WAND),
-    ADVANCED_WAND("Advanced Wand", 30, Items.ADVANCED_WAND),
-    COMBUSTION_SPELL("Combustion Spell", 10, Items.COMBUSTION_SPELL),
-    FIREBALL_SPELL("Fireball Spell", 15, Items.FIREBALL_SPELL),
-    LIGHT_BENDING_SPELL("Light Bending Spell", 5, Items.LIGHT_BENDING_SPELL),
-    LIGHT_BEAM_SPELL("Light Beam Spell", 15, Items.LIGHT_BEAM_SPELL),
-    TRACKING_BEAM_SPELL("Tracking Beam Spell", 25, Items.TRACKING_BEAM_SPELL),
-    TELEPORT_SPELL("Teleport Spell", 5, Items.TELEPORT_SPELL),
-    SWAP_SPELL("Swap Spell", 15, Items.SWAP_SPELL),
-    LIGHTNING_SPELL("Lightning Spell", 10, Items.LIGHTNING_SPELL),
-    WATER_SHOCK_SPELL("Water Shock Spell", 15, Items.WATER_SHOCK_SPELL),
-    LEVITATE_SPELL("Levitate Spell", 5, Items.LEVITATE_SPELL),
-    LAUNCH_SPELL("Launch Spell", 15, Items.LAUNCH_SPELL),
-    THROW_SPELL("Throw Spell", 25, Items.THROW_SPELL),
-    FAST_SWIMMING_SPELL("Fast Swimming Spell", 5, Items.FAST_SWIMMING_SPELL),
-    ICE_SHIELD_SPELL("Ice Shield Spell", 15, Items.ICE_SHIELD_SPELL),
-    TREE_TRAP_SPELL("Tree Trap Spell", 5, Items.TREE_TRAP_SPELL);
+    VOID_BENCH("虚空研究台", 30, Items.VOID_RESEARCH_BENCH),
+    VOID_BAG("虚空背包", 10, Items.VOID_BAG),
+    VOID_PORTAL("虚空传送门", 30, Items.VOID_PORTAL),
+    VOID_ALTAR("虚空祭坛", 15, Items.VOID_ALTAR),
+    BASIC_WAND("基础魔杖", 20, Items.BASIC_WAND),
+    ADVANCED_WAND("高级魔杖", 30, Items.ADVANCED_WAND),
+    COMBUSTION_SPELL("燃烧咒语", 10, Items.COMBUSTION_SPELL),
+    FIREBALL_SPELL("火球术", 15, Items.FIREBALL_SPELL),
+    LIGHT_BENDING_SPELL("光束变形术", 5, Items.LIGHT_BENDING_SPELL),
+    LIGHT_BEAM_SPELL("光束咒语", 15, Items.LIGHT_BEAM_SPELL),
+    TRACKING_BEAM_SPELL("追踪光束咒语", 25, Items.TRACKING_BEAM_SPELL),
+    TELEPORT_SPELL("传送咒语", 5, Items.TELEPORT_SPELL),
+    SWAP_SPELL("移形换位咒语", 15, Items.SWAP_SPELL),
+    LIGHTNING_SPELL("闪电咒语", 10, Items.LIGHTNING_SPELL),
+    WATER_SHOCK_SPELL("水潮克咒", 15, Items.WATER_SHOCK_SPELL),
+    LEVITATE_SPELL("漂浮咒语", 5, Items.LEVITATE_SPELL),
+    LAUNCH_SPELL("发射咒语", 15, Items.LAUNCH_SPELL),
+    THROW_SPELL("投掷咒语", 25, Items.THROW_SPELL),
+    FAST_SWIMMING_SPELL("高速游泳咒语", 5, Items.FAST_SWIMMING_SPELL),
+    ICE_SHIELD_SPELL("冰盾咒语", 15, Items.ICE_SHIELD_SPELL),
+    TREE_TRAP_SPELL("树木陷阱咒语", 5, Items.TREE_TRAP_SPELL);
 
     @Getter
     private final Research research;

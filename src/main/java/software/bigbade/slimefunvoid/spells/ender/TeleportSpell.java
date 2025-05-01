@@ -42,7 +42,7 @@ public class TeleportSpell extends BasicSpell {
             player.getWorld().spawnParticle(Particle.DRAGON_BREATH, output, 30);
             return true;
         }
-        player.sendMessage(ChatColor.RED + "Target out of reach");
+        player.sendMessage(ChatColor.RED + "目标超出范围");
         return false;
     }
 

@@ -11,6 +11,6 @@ import java.util.function.BiConsumer;
 
 public class VoidAltarRecipe extends RecipeType {
     public VoidAltarRecipe(BiConsumer<ItemStack[], ItemStack> callback) {
-        super(new NamespacedKey(SlimefunVoid.getInstance(), "void_altar"), Items.VOID_ALTAR, callback, ChatColor.DARK_PURPLE + "Crafted with the Void Alter");
+        super(new NamespacedKey(SlimefunVoid.getInstance(), "void_altar"), Items.VOID_ALTAR, callback, ChatColor.DARK_PURPLE + "使用虚空祭坛合成");
     }
 }

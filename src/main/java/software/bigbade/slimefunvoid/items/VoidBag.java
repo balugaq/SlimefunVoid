@@ -62,7 +62,7 @@ public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> implements NotPl
             } else if (event.getPlayer().isSneaking()) {
                 setTargetBlock(data, event.getPlayer());
             } else {
-                event.getPlayer().sendMessage(ChatColor.RED + "You must bind the Void Bag to a chest!");
+                event.getPlayer().sendMessage(ChatColor.RED + "你必须将虚空背包绑定在一个箱子上!");
             }
             event.getItem().setItemMeta(meta);
         };
@@ -71,13 +71,13 @@ public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> implements NotPl
     private void setTargetBlock(PersistentDataContainer data, Player player) {
         Block block = player.getTargetBlockExact(7, FluidCollisionMode.NEVER);
         if (block == null || !block.getType().equals(Material.CHEST)) {
-            player.sendMessage(ChatColor.RED + "Targeted block is not a Chest!");
+            player.sendMessage(ChatColor.RED + "目标方块不是箱子!");
             return;
         }
         Location loc = block.getLocation();
         Objects.requireNonNull(loc.getWorld());
         data.set(BAG_LOCATION, PersistentDataType.STRING, loc.getWorld().getName() + "|" + loc.getX() + "|" + loc.getY() + "|" + loc.getZ());
-        player.sendMessage(ChatColor.GREEN + "Set bag location!");
+        player.sendMessage(ChatColor.GREEN + "已设置背包位置!");
     }
 
     private void openBag(PersistentDataContainer data, Player player) {
@@ -90,7 +90,7 @@ public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> implements NotPl
             player.openInventory(chest);
         } else {
             data.remove(BAG_LOCATION);
-            player.sendMessage(ChatColor.RED + "Invalid bag location! Target chest might of been broken.");
+            player.sendMessage(ChatColor.RED + "无效背包位置！目标箱子可能已被破坏！");
         }
     }
 }
