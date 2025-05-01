@@ -242,12 +242,12 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
     private void onSpellCast(ItemStack item, Player player) {
         String name = Objects.requireNonNull(item.getItemMeta()).getDisplayName();
         if (!Pattern.compile(WAND_REGEX).matcher(name).find()) {
-            player.sendMessage(ChatColor.RED + "Shift右键选择一个术语!");
+            player.sendMessage(ChatColor.RED + "你必须先使用Shift右键选择一个术语!");
             return;
         }
         WandSpell wandSpell = getCurrentSpell(name);
         if (wandSpell == null) {
-            player.sendMessage(ChatColor.RED + "Shift右键选择一个术语!");
+            player.sendMessage(ChatColor.RED + "你必须先使用Shift右键选择一个术语!");
             return;
         }
         WandItem wand = WandItem.getWand(item);

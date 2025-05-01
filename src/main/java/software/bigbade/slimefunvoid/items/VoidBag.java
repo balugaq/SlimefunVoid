@@ -77,7 +77,7 @@ public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> implements NotPl
         Location loc = block.getLocation();
         Objects.requireNonNull(loc.getWorld());
         data.set(BAG_LOCATION, PersistentDataType.STRING, loc.getWorld().getName() + "|" + loc.getX() + "|" + loc.getY() + "|" + loc.getZ());
-        player.sendMessage(ChatColor.GREEN + "已设置背包位置!");
+        player.sendMessage(ChatColor.GREEN + "成功绑定背包!");
     }
 
     private void openBag(PersistentDataContainer data, Player player) {
@@ -90,7 +90,7 @@ public class VoidBag extends SimpleSlimefunItem<ItemUseHandler> implements NotPl
             player.openInventory(chest);
         } else {
             data.remove(BAG_LOCATION);
-            player.sendMessage(ChatColor.RED + "无效背包位置！目标箱子可能已被破坏！");
+            player.sendMessage(ChatColor.RED + "无法绑定背包，箱子已被拆除！");
         }
     }
 }

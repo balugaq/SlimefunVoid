@@ -30,9 +30,8 @@ public enum VoidMessages {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1, 300));
             })),
     WISE_MENTOR("一位智慧导师注视着你", "它似乎承认并接受了你的存在", new String[]{"立即离开", "请求指导", "偷取一些知识",}, Arrays.asList(
-            // 在这里添加对应的逻辑
     ));
-}
+
     @Getter
     private final String name;
     @Getter
