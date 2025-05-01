@@ -31,12 +31,12 @@ public class ResearchBenchMenu extends ChestMenu {
     public static final NamespacedKey RESEARCH_KEY = new NamespacedKey(SlimefunVoid.getInstance(), "void_research_bench");
 
     public static final NamespacedKey RESEARCH_START = new NamespacedKey(SlimefunVoid.getInstance(), "research_start");
-    private static final CustomItemStack NO_RESEARCH = new CustomItemStack(Material.PAPER, "&aCurrent Research:", ChatColor.WHITE + "None");
+    private static final CustomItemStack NO_RESEARCH = new CustomItemStack(Material.PAPER, "&a当前研究:", ChatColor.WHITE + "无");
     private final CategorySelectMenu researchMenu = new CategorySelectMenu();
     private final Map<UUID, Integer> runningTasks = new HashMap<>();
 
     public ResearchBenchMenu() {
-        super("&5Void Research Bench");
+        super("&5虚空研究台");
         initMenu();
     }
 
@@ -55,12 +55,12 @@ public class ResearchBenchMenu extends ChestMenu {
             addItem(i, GREY_GLASS, (player, slot, item, action) -> false);
         }
 
-        addItem(11, new CustomItemStack(Material.PAPER, ChatColor.GREEN + "Select Void Research"), (player, slot, item, action) -> {
+        addItem(11, new CustomItemStack(Material.PAPER, ChatColor.GREEN + "选择虚空研究"), (player, slot, item, action) -> {
             researchMenu.open(player);
             return false;
         });
 
-        addItem(15, new CustomItemStack(Material.BARRIER, ChatColor.GREEN + "Put Researches here"), (player, slot, item, action) -> {
+        addItem(15, new CustomItemStack(Material.BARRIER, ChatColor.GREEN + "将研究放入此处"), (player, slot, item, action) -> {
             if (addResearchNotes(player, player.getItemOnCursor()))
                 player.setItemOnCursor(null);
             return false;
@@ -92,7 +92,7 @@ public class ResearchBenchMenu extends ChestMenu {
                 addResearch(player, research, false);
                 researchItem = NO_RESEARCH;
             } else {
-                researchItem = new CustomItemStack(Material.PAPER, "&aCurrent Research:", category.getColor() + researchName, ChatColor.WHITE.toString() + timeRemaining + "s");
+                researchItem = new CustomItemStack(Material.PAPER, "&a当前研究:", category.getColor() + researchName, ChatColor.WHITE.toString() + timeRemaining + "s");
                 runningTasks.put(player.getUniqueId(), Bukkit.getScheduler().scheduleSyncRepeatingTask(SlimefunVoid.getInstance(), () -> {
                     ItemStack running = getItemInSlot(13);
                     ItemMeta meta = running.getItemMeta();
@@ -127,7 +127,7 @@ public class ResearchBenchMenu extends ChestMenu {
         if (research.getResearch().getUnlock() != null) {
             research.getResearch().getUnlock().unlock(player, true);
         }
-        player.sendMessage(ChatColor.GREEN + "You unlocked " + research.getResearch().getName());
+        player.sendMessage(ChatColor.GREEN + "你已解锁 " + research.getResearch().getName());
     }
 
     /**
@@ -142,7 +142,7 @@ public class ResearchBenchMenu extends ChestMenu {
             return false;
         ItemMeta meta = cursor.getItemMeta();
         Objects.requireNonNull(meta);
-        if (!meta.getDisplayName().equals(ChatColor.DARK_PURPLE + "Void Research") || meta.getLore() == null || meta.getLore().isEmpty())
+        if (!meta.getDisplayName().equals(ChatColor.DARK_PURPLE + "虚空研究") || meta.getLore() == null || meta.getLore().isEmpty())
             return false;
         VoidResearches research = VoidResearches.valueOf(getEnumName(meta.getLore().get(0)));
         IResearchCategory category = VoidCategories.values()[research.getCategoryID() - 1].getCategory();
@@ -151,15 +151,15 @@ public class ResearchBenchMenu extends ChestMenu {
         if (category.getResearches().contains(research.getResearch())) {
             if (researched == found) {
                 addResearch(player, research, true);
-                player.sendMessage(ChatColor.GREEN + "Researched " + category.getColor() + research.getResearch().getName() + ChatColor.GREEN + " with notes.");
+                player.sendMessage(ChatColor.GREEN + "使用笔记研究 " + category.getColor() + research.getResearch().getName() + ChatColor.GREEN + " 。");
                 return true;
             } else if (researched > found) {
-                player.sendMessage(ChatColor.RED + "You have already researched " + category.getColor() + research.getResearch().getName());
+                player.sendMessage(ChatColor.RED + "你已研究 " + category.getColor() + research.getResearch().getName());
             } else {
-                player.sendMessage(ChatColor.RED + "You do not understand the notes.");
+                player.sendMessage(ChatColor.RED + "你无法理解笔记");
             }
         } else {
-            player.sendMessage(ChatColor.RED + "You do not understand the notes.");
+            player.sendMessage(ChatColor.RED + "你无法理解笔记");
         }
         return false;
     }

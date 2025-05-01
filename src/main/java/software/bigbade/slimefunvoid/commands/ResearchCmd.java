@@ -19,7 +19,7 @@ public class ResearchCmd implements CommandExecutor {
             return false;
         }
         if (!commandSender.isOp() && !commandSender.hasPermission("slimevoid.research")) {
-            commandSender.sendMessage(ChatColor.RED + "You do not have permission to run this command!");
+            commandSender.sendMessage(ChatColor.RED + "您没有运行此命令的权限!");
             return true;
         }
         boolean adding = args[0].equals("add");
@@ -28,19 +28,19 @@ public class ResearchCmd implements CommandExecutor {
         }
         Player target = Bukkit.getPlayer(args[1]);
         if (target == null) {
-            commandSender.sendMessage(ChatColor.RED + "Could not find player " + args[1] + " (Player might be offline)");
+            commandSender.sendMessage(ChatColor.RED + "无法找到玩家 " + args[1] + " (玩家不在线)");
             return true;
         }
         VoidResearches researches;
         try {
             researches = VoidResearches.valueOf(ResearchBenchMenu.getEnumName(args[2]));
         } catch (IllegalArgumentException e) {
-            commandSender.sendMessage(ChatColor.RED + "Research " + args[2] + " does not exist!");
+            commandSender.sendMessage(ChatColor.RED + "研究 " + args[2] + " 不存在!");
             return true;
         }
         if (adding) {
             VoidResearchHelper.addResearch(target, researches);
-            commandSender.sendMessage(ChatColor.GREEN + "Successfully added research");
+            commandSender.sendMessage(ChatColor.GREEN + "成功添加研究");
         }
         return true;
     }

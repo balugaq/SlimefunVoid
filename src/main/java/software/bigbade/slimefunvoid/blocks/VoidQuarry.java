@@ -36,7 +36,7 @@ import java.util.Random;
 public class VoidQuarry extends SlimefunItem {
     private static final int MAX_QUARRY_SIZE = 20;
     private static final int MAX_QUARRY_HEIGHT = 7;
-    private static final String WARNING = " Make sure it is attached to a cube of fences (max of " + MAX_QUARRY_SIZE + "x" + MAX_QUARRY_HEIGHT + "x" + MAX_QUARRY_SIZE + ")";
+    private static final String WARNING = " 确保它连接在一个立方体的栅栏上(最大 " + MAX_QUARRY_SIZE + "x" + MAX_QUARRY_HEIGHT + "x" + MAX_QUARRY_SIZE + ")";
     private static final BlockFace[] FACES = new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN};
     @Getter
     private Map<PlacedVoidQuarry, Integer> quarries = new HashMap<>();
@@ -53,9 +53,9 @@ public class VoidQuarry extends SlimefunItem {
             public void onPlayerPlace(BlockPlaceEvent e) {
                 Bukkit.getScheduler().runTaskAsynchronously(SlimefunVoid.getInstance(), () -> {
                     if (setupQuarry(e.getBlock()))
-                        e.getPlayer().sendMessage(ChatColor.GREEN + "Setup quarry." + WARNING);
+                        e.getPlayer().sendMessage(ChatColor.GREEN + "启动挖掘." + WARNING);
                     else
-                        e.getPlayer().sendMessage(ChatColor.RED + "Could not setup quarry!" + WARNING);
+                        e.getPlayer().sendMessage(ChatColor.RED + "无法启动挖掘!" + WARNING);
                 });
             }
         });
@@ -132,18 +132,18 @@ public class VoidQuarry extends SlimefunItem {
             return;
         Bukkit.getScheduler().runTaskAsynchronously(SlimefunVoid.getInstance(), () -> {
             if (setupQuarry(block.get()))
-                event.getPlayer().sendMessage(ChatColor.GREEN + "Setup quarry." + WARNING);
+                event.getPlayer().sendMessage(ChatColor.GREEN + "启动挖掘." + WARNING);
             else
-                event.getPlayer().sendMessage(ChatColor.RED + "Could not setup quarry!" + WARNING);
+                event.getPlayer().sendMessage(ChatColor.RED + "无法启动挖掘!" + WARNING);
         });
     }
 
     private boolean onPlace(BlockPlaceEvent event, ItemStack item) {
         Bukkit.getScheduler().runTaskAsynchronously(SlimefunVoid.getInstance(), () -> {
             if (setupQuarry(event.getBlock()))
-                event.getPlayer().sendMessage(ChatColor.GREEN + "Setup quarry." + WARNING);
+                event.getPlayer().sendMessage(ChatColor.GREEN + "启动挖掘." + WARNING);
             else
-                event.getPlayer().sendMessage(ChatColor.RED + "Could not setup quarry!" + WARNING);
+                event.getPlayer().sendMessage(ChatColor.RED + "无法启动挖掘!" + WARNING);
         });
         return true;
     }

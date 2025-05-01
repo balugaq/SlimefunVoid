@@ -38,7 +38,7 @@ public class SwapSpell extends BasicSpell {
                 return true;
             }
         }
-        player.sendMessage(ChatColor.RED + "You have to look at a target in range!");
+        player.sendMessage(ChatColor.RED + "你必须看着射程内的目标！");
         return false;
     }
 

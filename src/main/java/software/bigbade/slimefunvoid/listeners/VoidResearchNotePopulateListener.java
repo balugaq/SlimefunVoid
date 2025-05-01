@@ -101,6 +101,6 @@ public class VoidResearchNotePopulateListener implements Listener {
         }
         if (research == null)
             return null;
-        return new CustomItemStack(Material.PAPER, "&5Void Research", research.getName());
+        return new CustomItemStack(Material.PAPER, "&5虚空研究", research.getName());
     }
 }

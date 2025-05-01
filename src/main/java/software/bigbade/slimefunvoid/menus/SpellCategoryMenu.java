@@ -15,7 +15,7 @@ import java.util.Objects;
 public class SpellCategoryMenu extends ChestMenu {
 
     public SpellCategoryMenu() {
-        super("&aSelect the spell element");
+        super("&a选择术语元素");
         for (int i = 0; i < 54; i++) {
             if (i < 45 && i % 9 != 8 && i % 9 != 0)
                 continue;
