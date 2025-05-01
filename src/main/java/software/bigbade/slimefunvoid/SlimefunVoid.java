@@ -33,7 +33,7 @@ public class SlimefunVoid extends JavaPlugin implements SlimefunAddon {
     public void onEnable() {
         setInstance(this);
 
-        ItemGroup category = new ItemGroup(new NamespacedKey(this, "slimevoid_category"), new CustomItemStack(Material.ENDER_EYE, "&5粘液虚空"));
+        ItemGroup category = new ItemGroup(new NamespacedKey(this, "slimevoid_category"), new CustomItemStack(Material.ENDER_EYE, "&5虚无粘液"));
         category.register(this);
 
         Objects.requireNonNull(getCommand("svresearch")).setExecutor(new ResearchCmd());
