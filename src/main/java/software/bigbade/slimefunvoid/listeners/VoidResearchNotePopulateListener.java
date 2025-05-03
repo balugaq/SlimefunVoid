@@ -58,7 +58,7 @@ public class VoidResearchNotePopulateListener implements Listener {
 
     @EventHandler
     public void onEntityInteract(PlayerInteractAtEntityEvent event) {
-        if (event.getRightClicked().getType() != EntityType.MINECART_CHEST)
+        if (event.getRightClicked().getType() != EntityType.CHEST_MINECART)
             return;
         StorageMinecart minecart = (StorageMinecart) event.getRightClicked();
         if (minecart.getLootTable() == null)

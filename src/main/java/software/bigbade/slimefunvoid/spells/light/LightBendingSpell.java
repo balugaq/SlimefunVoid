@@ -18,7 +18,7 @@ public class LightBendingSpell extends BasicSpell {
     @Override
     public boolean onCast(Player player, ItemStack wand) {
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, (int) getMultipliedDamage(wand, 1000, Elements.LIGHT), 0));
-        player.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, player.getLocation(), 50);
+        player.getWorld().spawnParticle(Particle.FIREWORK, player.getLocation(), 50);
         return true;
     }
 

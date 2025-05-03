@@ -20,7 +20,7 @@ public enum VoidMessages {
     FIERCE_WARRIOR("你看到一位以蛮力著称的强大战士", "它似乎注意到了你", new String[]{"立即离开", "要求它服务", "与它接触", "向它伸出援手", "让它与你接触"}, Arrays.asList(
             player -> player.sendMessage(ChatColor.GREEN + "你在任何事情发生之前就离开了"), player -> {
                 player.sendMessage(ChatColor.GREEN + "这个存在赋予了你部分它的力量");
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 2, 500));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 2, 500));
             }, player -> {
                 player.sendMessage(ChatColor.GREEN + "这个存在赋予了你部分它的活力");
                 player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 2, 500));
