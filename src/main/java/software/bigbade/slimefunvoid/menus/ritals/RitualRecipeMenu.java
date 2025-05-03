@@ -1,17 +1,17 @@
 package software.bigbade.slimefunvoid.menus.ritals;
 
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ChestMenu;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.api.research.VoidRecipes;
 
 public class RitualRecipeMenu extends ChestMenu {
     private IndividualRitualMenu ritualMenu = new IndividualRitualMenu();
 
     public RitualRecipeMenu() {
-        super(SlimefunVoid.getInstance(), "&5Void Rituals");
+        super("&5Void Rituals");
 
-        setSize(27);
+        addItem(26, new ItemStack(Material.AIR));
 
         initMenu();
     }
@@ -19,8 +19,8 @@ public class RitualRecipeMenu extends ChestMenu {
     private void initMenu() {
         setPlayerInventoryClickable(false);
         int i = 0;
-        for(ItemStack output : VoidRecipes.getRecipes().keySet()) {
-            addItem(i, output, (player, slot, item, cursor, action) -> {
+        for (ItemStack output : VoidRecipes.getRecipes().keySet()) {
+            addItem(i, output, (player, slot, item, action) -> {
                 ritualMenu.open(player, output);
                 return false;
             });

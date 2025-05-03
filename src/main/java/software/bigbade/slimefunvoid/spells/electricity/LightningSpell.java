@@ -26,7 +26,7 @@ public class LightningSpell extends BasicSpell {
             strikeLightning(target.getLocation(), (int) getMultipliedDamage(wand, 1, Elements.ELECTRIC));
             return true;
         }
-        player.sendMessage(ChatColor.RED + "That target is out of range! You must target a block");
+        player.sendMessage(ChatColor.RED + "目标在射程之外！你必须瞄准一个方块");
         return false;
     }
 
@@ -39,7 +39,7 @@ public class LightningSpell extends BasicSpell {
         Objects.requireNonNull(location.getWorld());
         SelfCancelableTask task = new SelfCancelableTask();
         task.setRunnable(() -> {
-            if(amount == task.getLoops()) {
+            if (amount == task.getLoops()) {
                 task.cancel();
                 return;
             }

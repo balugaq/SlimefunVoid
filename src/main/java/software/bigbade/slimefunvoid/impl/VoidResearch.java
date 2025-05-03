@@ -1,23 +1,22 @@
 package software.bigbade.slimefunvoid.impl;
 
+import io.github.thebusybiscuit.slimefun4.api.researches.Research;
+import lombok.Getter;
+import org.bukkit.ChatColor;
+import software.bigbade.slimefunvoid.api.research.IVoidResearch;
+
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.ChatColor;
-
-import io.github.thebusybiscuit.slimefun4.core.researching.Research;
-import lombok.Getter;
-import software.bigbade.slimefunvoid.api.research.IVoidResearch;
-
 public class VoidResearch implements IVoidResearch {
-    @Getter
-    private String name;
     @Getter
     private final Research unlock;
     @Getter
     private final List<String> lore;
     @Getter
     private final long researchTime;
+    @Getter
+    private String name;
 
     public VoidResearch(String name, long researchTime, Research unlock, String... lore) {
         this.name = ChatColor.translateAlternateColorCodes('&', name);
@@ -54,24 +53,24 @@ public class VoidResearch implements IVoidResearch {
         return name.hashCode();
     }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public List<String> getLore() {
-		return lore;
-	}
+    @Override
+    public List<String> getLore() {
+        return lore;
+    }
 
-	@Override
-	public Research getUnlock() {
-		return unlock;
-	}
+    @Override
+    public Research getUnlock() {
+        return unlock;
+    }
 
-	@Override
-	public long getResearchTime() {
-		// TODO Auto-generated method stub
-		return researchTime;
-	}
+    @Override
+    public long getResearchTime() {
+        // TODO Auto-generated method stub
+        return researchTime;
+    }
 }

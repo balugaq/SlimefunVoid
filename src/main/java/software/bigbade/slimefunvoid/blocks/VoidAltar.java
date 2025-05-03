@@ -1,10 +1,16 @@
 package software.bigbade.slimefunvoid.blocks;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
+import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.ItemUtils;
+import lombok.SneakyThrows;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -21,25 +27,17 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-
-import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
-import lombok.SneakyThrows;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import software.bigbade.slimefunvoid.items.Items;
 import software.bigbade.slimefunvoid.utils.RecipeItems;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public class VoidAltar extends SlimefunItem {
     private final VoidPortal portal;
 
-    public VoidAltar(Category category, VoidPortal portal) {
+    public VoidAltar(ItemGroup category, VoidPortal portal) {
         super(category, Items.VOID_ALTAR, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{RecipeItems.END_STONE, RecipeItems.END_STONE, RecipeItems.END_STONE,
                 RecipeItems.END_STONE, RecipeItems.OBSIDIAN, RecipeItems.END_STONE,
                 RecipeItems.END_STONE, RecipeItems.END_STONE, RecipeItems.END_STONE});
@@ -50,65 +48,36 @@ public class VoidAltar extends SlimefunItem {
         addItemHandler(blockUseHandler);
 
         addItemHandler(new BlockPlaceHandler(true) {
-			
-			@Override
-			public void onPlayerPlace(BlockPlaceEvent e) {
-		        Item held = getItem(e.getBlock());
-		        VoidPortal.VoidPortalData location = findPortal(e.getBlock().getLocation());
-		        if (held != null) {
-		        	dropItem(e.getPlayer(), new ItemStack(held.getItemStack().getType()), e.getBlock());
-		            held.remove();
-		        }
-		        if (location != null) {
-		            location.getAltars().remove(e.getBlock().getLocation());
-		        }
-			}
-		});
+
+            @Override
+            public void onPlayerPlace(BlockPlaceEvent e) {
+                Item held = getItem(e.getBlock());
+                VoidPortal.VoidPortalData location = findPortal(e.getBlock().getLocation());
+                if (held != null) {
+                    dropItem(e.getPlayer(), new ItemStack(held.getItemStack().getType()), e.getBlock());
+                    held.remove();
+                }
+                if (location != null) {
+                    location.getAltars().remove(e.getBlock().getLocation());
+                }
+            }
+        });
 
         addItemHandler(new BlockBreakHandler(false, false) {
-			
-			@Override
-			public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
-		        Item held = getItem(e.getBlock());
-		        VoidPortal.VoidPortalData location = findPortal(e.getBlock().getLocation());
-		        if (held != null) {
-		            drops.add(new ItemStack(held.getItemStack().getType()));
-		            held.remove();
-		        }
-		        if (location != null) {
-		            location.getAltars().remove(e.getBlock().getLocation());
-		        }
-			}
-		});
-    }
 
-    private void onBlockUse(PlayerRightClickEvent event) {
-        Player player = event.getPlayer();
-        Block block = prepareMenuOpen(event);
-        if (block == null)
-            return;
-        Item item = getItem(block);
-        VoidPortal.VoidPortalData location = findPortal(block.getLocation());
-        if (location == null) {
-            player.sendMessage("This altar is corrupted!");
-            return;
-        }
-        if (location.isInUse())
-            return;
-        if (item != null && !location.isInUse()) {
-            ItemStack stored = getStoredItem(block);
-            if (stored != null) {
-                event.getPlayer().getInventory().addItem();
+            @Override
+            public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
+                Item held = getItem(e.getBlock());
+                VoidPortal.VoidPortalData location = findPortal(e.getBlock().getLocation());
+                if (held != null) {
+                    drops.add(new ItemStack(held.getItemStack().getType()));
+                    held.remove();
+                }
+                if (location != null) {
+                    location.getAltars().remove(e.getBlock().getLocation());
+                }
             }
-            item.remove();
-        } else {
-            ItemStack heldItem = player.getInventory().getItemInMainHand();
-            if (heldItem.getType() == Material.AIR) {
-                player.sendMessage(ChatColor.RED + "You have to hold an item to put on the altar");
-                return;
-            }
-            dropItem(player, player.getInventory().getItemInMainHand(), block);
-        }
+        });
     }
 
     @SneakyThrows
@@ -118,11 +87,11 @@ public class VoidAltar extends SlimefunItem {
         if (data == null) return null;
         YamlConfiguration configuration = new YamlConfiguration();
         try {
-			configuration.loadFromString(data);
-		} catch (InvalidConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            configuration.loadFromString(data);
+        } catch (InvalidConfigurationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return configuration.getItemStack("item");
     }
 
@@ -142,7 +111,7 @@ public class VoidAltar extends SlimefunItem {
         }
 
         String nametag = ItemUtils.getItemName(stack);
-        CustomItem dropped = new CustomItem(stack, "VoidItem - " + System.currentTimeMillis());
+        CustomItemStack dropped = new CustomItemStack(stack, "VoidItem - " + System.currentTimeMillis());
         storeItem(stack, block);
         Item entity = block.getWorld().dropItem(block.getLocation().add(0.5, 1.2, 0.5), dropped);
         entity.setInvulnerable(true);
@@ -161,6 +130,41 @@ public class VoidAltar extends SlimefunItem {
                 return (Item) entity;
         }
         return null;
+    }
+
+    public static void storeItem(ItemStack item, Block block) {
+        YamlConfiguration configuration = new YamlConfiguration();
+        configuration.set("item", item);
+        BlockStorage.addBlockInfo(block, "dropped", configuration.saveToString());
+    }
+
+    private void onBlockUse(PlayerRightClickEvent event) {
+        Player player = event.getPlayer();
+        Block block = prepareMenuOpen(event);
+        if (block == null)
+            return;
+        Item item = getItem(block);
+        VoidPortal.VoidPortalData location = findPortal(block.getLocation());
+        if (location == null) {
+            player.sendMessage("这个祭坛被腐蚀了!");
+            return;
+        }
+        if (location.isInUse())
+            return;
+        if (item != null && !location.isInUse()) {
+            ItemStack stored = getStoredItem(block);
+            if (stored != null) {
+                event.getPlayer().getInventory().addItem();
+            }
+            item.remove();
+        } else {
+            ItemStack heldItem = player.getInventory().getItemInMainHand();
+            if (heldItem.getType() == Material.AIR) {
+                player.sendMessage(ChatColor.RED + "你必须拿着一件物品放在祭坛上");
+                return;
+            }
+            dropItem(player, player.getInventory().getItemInMainHand(), block);
+        }
     }
 
     @Nullable
@@ -188,11 +192,5 @@ public class VoidAltar extends SlimefunItem {
             return altarLocation;
         }
         return null;
-    }
-
-    public static void storeItem(ItemStack item, Block block) {
-        YamlConfiguration configuration = new YamlConfiguration();
-        configuration.set("item", item);
-        BlockStorage.addBlockInfo(block, "dropped", configuration.saveToString());
     }
 }

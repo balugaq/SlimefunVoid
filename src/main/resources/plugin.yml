@@ -1,7 +1,7 @@
 name: SlimeVoid
 author: BigBadE
 version: 1.0
-api-version: 1.13
+api-version: 1.18
 main: software.bigbade.slimefunvoid.SlimefunVoid
 depend:
   - Slimefun

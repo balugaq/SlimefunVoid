@@ -21,13 +21,13 @@ public class LevitateSpell extends BasicSpell {
     @Override
     public boolean onCast(Player player, ItemStack wand) {
         float distance = getMultipliedDamage(wand, 20, Elements.VOID);
-        for(Entity entity : player.getNearbyEntities(distance, 5, distance)) {
-            if(entity instanceof LivingEntity && SwapSpell.getLookingAt(player, entity)) {
+        for (Entity entity : player.getNearbyEntities(distance, 5, distance)) {
+            if (entity instanceof LivingEntity && SwapSpell.getLookingAt(player, entity)) {
                 addLevitation((LivingEntity) entity, wand, (int) getMultipliedDamage(wand, 1, Elements.WIND));
                 return true;
             }
         }
-        player.sendMessage(ChatColor.RED + "You have to look at a target in range!");
+        player.sendMessage(ChatColor.RED + "你必须看着射程内的目标!");
         return false;
     }
 
@@ -37,6 +37,6 @@ public class LevitateSpell extends BasicSpell {
     }
 
     private void addLevitation(LivingEntity target, ItemStack wand, int amount) {
-        target.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, amount, (int) getMultipliedDamage(wand, 10, Elements.WIND)*20));
+        target.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, amount, (int) getMultipliedDamage(wand, 10, Elements.WIND) * 20));
     }
 }

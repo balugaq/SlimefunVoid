@@ -16,7 +16,7 @@ public class FastSwimmingSpell extends BasicSpell {
 
     @Override
     public boolean onCast(Player player, ItemStack wand) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, (int) getMultipliedDamage(wand, 10, Elements.WATER)*20, (int) getMultipliedDamage(wand, 1, Elements.WATER)));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, (int) getMultipliedDamage(wand, 10, Elements.WATER) * 20, (int) getMultipliedDamage(wand, 1, Elements.WATER)));
         return true;
     }
 

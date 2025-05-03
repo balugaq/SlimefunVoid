@@ -1,9 +1,8 @@
 package software.bigbade.slimefunvoid.api;
 
+import io.github.thebusybiscuit.slimefun4.api.researches.Research;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import io.github.thebusybiscuit.slimefun4.core.researching.Research;
 
 public interface WandSpell {
     boolean onCast(Player player, ItemStack wand);

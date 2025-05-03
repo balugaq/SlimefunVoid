@@ -1,16 +1,17 @@
 package software.bigbade.slimefunvoid.items.wands;
 
 import com.google.common.base.Strings;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
 import lombok.Getter;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.handlers.ItemUseHandler;
-import me.mrCookieSlime.Slimefun.SlimefunPlugin;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -34,25 +35,19 @@ import java.util.Random;
 import java.util.regex.Pattern;
 
 public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
+    private static final String WAND_REGEX = ChatColor.COLOR_CHAR + ". \\(";
+    private static final int BAR_LENGTH = 40;
     @Getter
     private final int maxElements;
     @Getter
     private final int maxElement;
     private final double baseBackfireChance;
-
     private final Random random = new Random();
-
     private final SpellCategoryMenu menu = new SpellCategoryMenu();
-
-    private static final String WAND_REGEX = ChatColor.COLOR_CHAR + ". \\(";
-
     private final HashMap<Player, Double> cooldowns = new HashMap<>();
-
-    private static final int BAR_LENGTH = 40;
-
     private final boolean useCooldown;
 
-    public WandItem(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, int maxElement, int maxElements, double baseBackfireChance) {
+    public WandItem(ItemGroup category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, int maxElement, int maxElements, double baseBackfireChance) {
         super(category, item, recipeType, recipe);
         this.maxElement = maxElement;
         this.maxElements = maxElements;
@@ -67,21 +62,16 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
         useCooldown = spigot;
     }
 
-    public double getModifier(Elements element) {
-        //Overridden by subclasses
-        return 1;
-    }
-
     @Nullable
     public static WandItem getWand(ItemStack item) {
-        Optional<String> idOptional = SlimefunPlugin.getItemDataService().getItemData(item.getItemMeta());
+        Optional<String> idOptional = Slimefun.getItemDataService().getItemData(item.getItemMeta());
         if (!idOptional.isPresent()) {
             return null;
         }
 
         String id = idOptional.get();
         for (SlimefunItemStack wand : Items.getWands()) {
-            if (wand.getItemID().equals(id)) {
+            if (wand.getItemId().equals(id)) {
                 return (WandItem) wand.getItem();
             }
         }
@@ -149,6 +139,21 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
         return 0;
     }
 
+    public static WandSpell getCurrentSpell(String name) {
+        String[] splitName = name.split(WAND_REGEX);
+        String spellName = splitName[splitName.length - 1].replace(")", "");
+        for (Spells spells : Spells.values()) {
+            if (spells.getSpell().getName().equals(spellName))
+                return spells.getSpell();
+        }
+        return null;
+    }
+
+    public double getModifier(Elements element) {
+        //Overridden by subclasses
+        return 1;
+    }
+
     public boolean backfires(WandItem wand) {
         double chance = wand.baseBackfireChance;
         chance *= getElementChance(Elements.VOID);
@@ -159,20 +164,10 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
     }
 
     private double getElementChance(Elements elements) {
-        float element = getElementAmount(item, elements);
+        float element = getElementAmount(new ItemStack(Material.STONE), elements);
         if (element != 0)
             return 1 + (maxElement / element);
         return 1;
-    }
-
-    public static WandSpell getCurrentSpell(String name) {
-        String[] splitName = name.split(WAND_REGEX);
-        String spellName = splitName[splitName.length - 1].replace(")", "");
-        for (Spells spells : Spells.values()) {
-            if (spells.getSpell().getName().equals(spellName))
-                return spells.getSpell();
-        }
-        return null;
     }
 
     @Override
@@ -247,12 +242,12 @@ public class WandItem extends SimpleSlimefunItem<ItemUseHandler> {
     private void onSpellCast(ItemStack item, Player player) {
         String name = Objects.requireNonNull(item.getItemMeta()).getDisplayName();
         if (!Pattern.compile(WAND_REGEX).matcher(name).find()) {
-            player.sendMessage(ChatColor.RED + "Shift Right Click to select a spell!");
+            player.sendMessage(ChatColor.RED + "你必须先使用Shift右键选择一个术语!");
             return;
         }
         WandSpell wandSpell = getCurrentSpell(name);
         if (wandSpell == null) {
-            player.sendMessage(ChatColor.RED + "Shift Right Click to select a spell!");
+            player.sendMessage(ChatColor.RED + "你必须先使用Shift右键选择一个术语!");
             return;
         }
         WandItem wand = WandItem.getWand(item);

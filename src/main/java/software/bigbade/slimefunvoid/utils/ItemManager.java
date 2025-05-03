@@ -1,8 +1,8 @@
 package software.bigbade.slimefunvoid.utils;
 
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.mrCookieSlime.Slimefun.Objects.Category;
 import software.bigbade.slimefunvoid.SlimefunVoid;
 import software.bigbade.slimefunvoid.blocks.VoidAltar;
 import software.bigbade.slimefunvoid.blocks.VoidAttractor;
@@ -14,7 +14,7 @@ import software.bigbade.slimefunvoid.items.wands.BasicWand;
 
 @RequiredArgsConstructor
 public class ItemManager {
-    private final Category category;
+    private final ItemGroup category;
 
     //@Getter
     //private VoidQuarry quarry;

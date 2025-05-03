@@ -1,6 +1,6 @@
 package software.bigbade.slimefunvoid.listeners;
 
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Chest;
@@ -26,9 +26,8 @@ import java.util.Objects;
 import java.util.Random;
 
 public class VoidResearchNotePopulateListener implements Listener {
-    private Random random = new Random();
-
     private static final EntityType[] DROPABLE = new EntityType[]{EntityType.IRON_GOLEM, EntityType.ENDERMAN, EntityType.VILLAGER, EntityType.ZOMBIE_VILLAGER, EntityType.EVOKER, EntityType.WITCH, EntityType.ILLUSIONER, EntityType.PILLAGER, EntityType.VINDICATOR};
+    private Random random = new Random();
 
     @EventHandler
     public void onChestOpen(PlayerInteractEvent event) {
@@ -102,6 +101,6 @@ public class VoidResearchNotePopulateListener implements Listener {
         }
         if (research == null)
             return null;
-        return new CustomItem(Material.PAPER, "&5Void Research", research.getName());
+        return new CustomItemStack(Material.PAPER, "&5虚空研究", research.getName());
     }
 }

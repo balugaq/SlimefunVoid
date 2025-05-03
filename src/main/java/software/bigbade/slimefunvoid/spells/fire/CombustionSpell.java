@@ -19,13 +19,13 @@ public class CombustionSpell extends BasicSpell {
     @Override
     public boolean onCast(Player player, ItemStack wand) {
         float distance = getMultipliedDamage(wand, 20, Elements.FIRE);
-        for(Entity entity : player.getNearbyEntities(distance, 5, distance)) {
-            if(entity instanceof LivingEntity && SwapSpell.getLookingAt(player, entity)) {
+        for (Entity entity : player.getNearbyEntities(distance, 5, distance)) {
+            if (entity instanceof LivingEntity && SwapSpell.getLookingAt(player, entity)) {
                 igniteEntity((LivingEntity) entity, wand);
                 return true;
             }
         }
-        player.sendMessage(ChatColor.RED + "You have to look at a target in range!");
+        player.sendMessage(ChatColor.RED + "你必须看着射程内的目标!");
         return false;
     }
 
@@ -35,6 +35,6 @@ public class CombustionSpell extends BasicSpell {
     }
 
     private void igniteEntity(LivingEntity entity, ItemStack wand) {
-        entity.setFireTicks(((int) getBackfireDamage(wand, 4, Elements.FIRE))*20);
+        entity.setFireTicks(((int) getBackfireDamage(wand, 4, Elements.FIRE)) * 20);
     }
 }

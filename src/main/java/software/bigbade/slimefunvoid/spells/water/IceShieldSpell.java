@@ -21,33 +21,15 @@ public class IceShieldSpell extends BasicSpell {
         super(Researches.ICE_SHIELD_SPELL.getResearch(), Elements.WATER, Items.ICE_SHIELD_SPELL, 15);
     }
 
-    @Override
-    public boolean onCast(Player player, ItemStack wand) {
-        makeSphere(player.getLocation(), Material.ICE, Material.AIR, getMultipliedDamage(wand, 3, Elements.WATER), false);
-        toRemove.put(player.getUniqueId(), player.getLocation());
-        return true;
-    }
-
-    @Override
-    public void onBackfire(Player player, ItemStack wand) {
-        makeSphere(player.getLocation(), Material.WATER, Material.AIR, getBackfireDamage(wand, 3, Elements.WATER), false);
-        toRemove.put(player.getUniqueId(), player.getLocation());
-    }
-
-    @Override
-    public void onStop(Player player, ItemStack wand) {
-        makeSphere(toRemove.get(player.getUniqueId()), Material.AIR, Material.ICE, getMultipliedDamage(wand, 3, Elements.WATER), false);
-        toRemove.remove(player.getUniqueId());
-    }
-
     /**
      * Makes a sphere of a given material replacing other material with given radius
      * From https://github.com/IntellectualSites/FastAsyncWorldEdit/blob/1.15/worldedit-core/src/main/java/com/sk89q/worldedit/EditSession.java
      * I know this method is a mess, I have <24 hours and don't wanna do math.
-     * @param pos Center of the sphere
-     * @param block Material the sphere is made of
+     *
+     * @param pos       Center of the sphere
+     * @param block     Material the sphere is made of
      * @param replacing Material to replace with block
-     * @param radius Radius of the sphere
+     * @param radius    Radius of the sphere
      */
     public static void makeSphere(Location pos, Material block, Material replacing, double radius, boolean filled) {
         radius += 0.5;
@@ -102,7 +84,8 @@ public class IceShieldSpell extends BasicSpell {
                         if (x != 0) setBlock(new Location(pos.getWorld(), px - x, py + y, pz + z), replacing, block);
                         if (z != 0) {
                             setBlock(new Location(pos.getWorld(), px + x, py + y, pz - z), replacing, block);
-                            if (x != 0) setBlock(new Location(pos.getWorld(), px - x, py + y, pz - z), replacing, block);
+                            if (x != 0)
+                                setBlock(new Location(pos.getWorld(), px - x, py + y, pz - z), replacing, block);
                         }
                     }
                     if (y != 0 && (yy = py - y) >= 0) {
@@ -120,7 +103,26 @@ public class IceShieldSpell extends BasicSpell {
 
     private static void setBlock(Location location, Material replacing, Material block) {
         Block target = location.getBlock();
-        if(target.getType() == replacing)
+        if (target.getType() == replacing)
             target.setType(block);
+    }
+
+    @Override
+    public boolean onCast(Player player, ItemStack wand) {
+        makeSphere(player.getLocation(), Material.ICE, Material.AIR, getMultipliedDamage(wand, 3, Elements.WATER), false);
+        toRemove.put(player.getUniqueId(), player.getLocation());
+        return true;
+    }
+
+    @Override
+    public void onBackfire(Player player, ItemStack wand) {
+        makeSphere(player.getLocation(), Material.WATER, Material.AIR, getBackfireDamage(wand, 3, Elements.WATER), false);
+        toRemove.put(player.getUniqueId(), player.getLocation());
+    }
+
+    @Override
+    public void onStop(Player player, ItemStack wand) {
+        makeSphere(toRemove.get(player.getUniqueId()), Material.AIR, Material.ICE, getMultipliedDamage(wand, 3, Elements.WATER), false);
+        toRemove.remove(player.getUniqueId());
     }
 }

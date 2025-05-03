@@ -28,8 +28,8 @@ public class ThrowSpell extends BasicSpell {
                 final float pitch = player.getEyeLocation().getPitch();
                 final Vector change = player.getLocation().toVector().subtract(entity.getLocation().toVector()).normalize().multiply(getMultipliedDamage(wand, 1.5f, Elements.WIND));
                 Bukkit.getScheduler().scheduleSyncDelayedTask(SlimefunVoid.getInstance(), () -> {
-                    float deltaYaw = (yaw - player.getEyeLocation().getYaw())*.05f;
-                    float deltaPitch = (pitch - player.getEyeLocation().getPitch())*.05f;
+                    float deltaYaw = (yaw - player.getEyeLocation().getYaw()) * .05f;
+                    float deltaPitch = (pitch - player.getEyeLocation().getPitch()) * .05f;
                     Vector adding = new Vector(0, 0, 0);
                     adding.add(rotate(change, new Vector(1, 0, 0)).multiply(-deltaYaw));
                     if (deltaPitch < 0)
@@ -41,7 +41,7 @@ public class ThrowSpell extends BasicSpell {
                 return true;
             }
         }
-        player.sendMessage(ChatColor.RED + "You have to look at a target in range!");
+        player.sendMessage(ChatColor.RED + "你必须看着射程内的目标!");
         return false;
     }
 

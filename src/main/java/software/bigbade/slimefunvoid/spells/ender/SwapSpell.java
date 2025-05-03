@@ -17,11 +17,19 @@ public class SwapSpell extends BasicSpell {
         super(Researches.SWAP_SPELL.getResearch(), Elements.VOID, Items.SWAP_SPELL, 15);
     }
 
+    public static boolean getLookingAt(Player player, Entity target) {
+        Location eye = player.getEyeLocation();
+        Vector toEntity = target.getLocation().add(0, target.getHeight() / 2, 0).subtract(eye).toVector();
+        double dot = toEntity.normalize().dot(eye.getDirection());
+
+        return dot > .97D;
+    }
+
     @Override
     public boolean onCast(Player player, ItemStack wand) {
         float distance = getMultipliedDamage(wand, 20, Elements.VOID);
-        for(Entity entity : player.getNearbyEntities(distance, 5, distance)) {
-            if(getLookingAt(player, entity)) {
+        for (Entity entity : player.getNearbyEntities(distance, 5, distance)) {
+            if (getLookingAt(player, entity)) {
                 Location playerLoc = player.getLocation();
                 player.teleport(entity.getLocation());
                 player.getWorld().spawnParticle(Particle.DRAGON_BREATH, entity.getLocation(), 50);
@@ -30,20 +38,12 @@ public class SwapSpell extends BasicSpell {
                 return true;
             }
         }
-        player.sendMessage(ChatColor.RED + "You have to look at a target in range!");
+        player.sendMessage(ChatColor.RED + "你必须看着射程内的目标！");
         return false;
     }
 
     @Override
     public void onBackfire(Player player, ItemStack wand) {
         TeleportSpell.randomTeleport(player, wand);
-    }
-
-    public static boolean getLookingAt(Player player, Entity target) {
-        Location eye = player.getEyeLocation();
-        Vector toEntity = target.getLocation().add(0, target.getHeight()/2, 0).subtract(eye).toVector();
-        double dot = toEntity.normalize().dot(eye.getDirection());
-
-        return dot > .97D;
     }
 }

@@ -28,14 +28,14 @@ public class TreeTrapSpell extends BasicSpell {
     @Override
     public boolean onCast(Player player, ItemStack wand) {
         float distance = getMultipliedDamage(wand, 20, Elements.GRASS);
-        for(Entity entity : player.getNearbyEntities(distance, 5, distance)) {
-            if(entity instanceof LivingEntity && SwapSpell.getLookingAt(player, entity)) {
+        for (Entity entity : player.getNearbyEntities(distance, 5, distance)) {
+            if (entity instanceof LivingEntity && SwapSpell.getLookingAt(player, entity)) {
                 trapEntity((LivingEntity) entity, wand);
                 toRemove.put(player.getUniqueId(), entity.getLocation());
                 return true;
             }
         }
-        player.sendMessage(ChatColor.RED + "You have to look at a target in range!");
+        player.sendMessage(ChatColor.RED + "你必须看着射程内的目标!");
         return false;
     }
 
