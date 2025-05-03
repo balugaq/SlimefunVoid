@@ -28,7 +28,7 @@ public class LightBeamSpell extends BasicSpell {
         final int distance = (int) getMultipliedDamage(wand, 20, Elements.LIGHT);
         task.setRunnable(() -> {
             location.add(location.getDirection());
-            player.getWorld().spawnParticle(Particle.SMOKE, location, 1, 0, 0, 0, 0);
+            player.getWorld().spawnParticle(Particle.FIREWORK, location, 1, 0, 0, 0, 0);
             Collection<Entity> nearby = player.getWorld().getNearbyEntities(location, .55, .55, .55);
             if (!nearby.isEmpty()) {
                 Entity target = nearby.iterator().next();
