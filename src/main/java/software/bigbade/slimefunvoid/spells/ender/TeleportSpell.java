@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
+import software.bigbade.slimefunvoid.VersionedParticle;
 import software.bigbade.slimefunvoid.api.Elements;
 import software.bigbade.slimefunvoid.api.research.Researches;
 import software.bigbade.slimefunvoid.impl.BasicSpell;
@@ -27,7 +28,7 @@ public class TeleportSpell extends BasicSpell {
         location.add(ThreadLocalRandom.current().nextDouble(distance) - (half), 0, ThreadLocalRandom.current().nextDouble(distance) - (half));
         location.setY(player.getWorld().getHighestBlockAt(location).getLocation().getY() + 1);
         player.teleport(location);
-        player.getWorld().spawnParticle(Particle.CRIT, location, 200);
+        player.getWorld().spawnParticle(VersionedParticle.CRIT, location, 200);
     }
 
     @Override

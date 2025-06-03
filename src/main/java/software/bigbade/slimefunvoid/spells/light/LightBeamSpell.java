@@ -1,5 +1,6 @@
 package software.bigbade.slimefunvoid.spells.light;
 
+import io.github.thebusybiscuit.slimefun4.utils.compatibility.VersionedParticle;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -28,7 +29,7 @@ public class LightBeamSpell extends BasicSpell {
         final int distance = (int) getMultipliedDamage(wand, 20, Elements.LIGHT);
         task.setRunnable(() -> {
             location.add(location.getDirection());
-            player.getWorld().spawnParticle(Particle.FIREWORK, location, 1, 0, 0, 0, 0);
+            player.getWorld().spawnParticle(VersionedParticle.SMOKE, location, 1, 0, 0, 0, 0);
             Collection<Entity> nearby = player.getWorld().getNearbyEntities(location, .55, .55, .55);
             if (!nearby.isEmpty()) {
                 Entity target = nearby.iterator().next();

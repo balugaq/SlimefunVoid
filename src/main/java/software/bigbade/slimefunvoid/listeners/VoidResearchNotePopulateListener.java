@@ -17,6 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import software.bigbade.slimefunvoid.VersionedEntityType;
 import software.bigbade.slimefunvoid.api.research.IVoidResearch;
 import software.bigbade.slimefunvoid.api.research.VoidCategories;
 import software.bigbade.slimefunvoid.utils.VoidResearchHelper;
@@ -58,7 +59,7 @@ public class VoidResearchNotePopulateListener implements Listener {
 
     @EventHandler
     public void onEntityInteract(PlayerInteractAtEntityEvent event) {
-        if (event.getRightClicked().getType() != EntityType.CHEST_MINECART)
+        if (event.getRightClicked().getType() != VersionedEntityType.CHEST_MINECART)
             return;
         StorageMinecart minecart = (StorageMinecart) event.getRightClicked();
         if (minecart.getLootTable() == null)

@@ -1,5 +1,6 @@
 package software.bigbade.slimefunvoid.tasks;
 
+import io.github.thebusybiscuit.slimefun4.utils.compatibility.VersionedParticle;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -42,7 +43,7 @@ public class VoidRitualTask implements Runnable {
             Vector current = portalVec.clone();
             int i = 0;
             while (i < 20) {
-                portal.getWorld().spawnParticle(Particle.WITCH, current.getX(), current.getY(), current.getZ(), 1, 0, 0, 0, 0);
+                portal.getWorld().spawnParticle(VersionedParticle.WITCH, current.getX(), current.getY(), current.getZ(), 1, 0, 0, 0, 0);
                 current.add(movement);
                 i++;
             }
@@ -58,7 +59,7 @@ public class VoidRitualTask implements Runnable {
                 return;
             }
             Objects.requireNonNull(pedestal.getWorld());
-            pedestal.getWorld().spawnParticle(Particle.WITCH, item.getLocation(), 50, 0, 0, 0, 1);
+            pedestal.getWorld().spawnParticle(VersionedParticle.WITCH, item.getLocation(), 50, 0, 0, 0, 1);
             pedestal.getWorld().playSound(item.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1L, 1L);
             item.remove();
             stage += 1;

@@ -1,5 +1,6 @@
 package software.bigbade.slimefunvoid.spells.water;
 
+import io.github.thebusybiscuit.slimefun4.utils.compatibility.VersionedPotionEffectType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -22,6 +23,6 @@ public class FastSwimmingSpell extends BasicSpell {
 
     @Override
     public void onBackfire(Player player, ItemStack wand) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, (int) getBackfireDamage(wand, 100, Elements.WATER), 0));
+        player.addPotionEffect(new PotionEffect(VersionedPotionEffectType.SLOWNESS, (int) getBackfireDamage(wand, 100, Elements.WATER), 0));
     }
 }
