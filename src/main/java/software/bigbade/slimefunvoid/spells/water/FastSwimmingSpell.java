@@ -22,6 +22,6 @@ public class FastSwimmingSpell extends BasicSpell {
 
     @Override
     public void onBackfire(Player player, ItemStack wand) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) getBackfireDamage(wand, 100, Elements.WATER), 0));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, (int) getBackfireDamage(wand, 100, Elements.WATER), 0));
     }
 }

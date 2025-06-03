@@ -38,7 +38,7 @@ public class TrackingBeamSpell extends BasicSpell {
         final int distance = (int) getMultipliedDamage(wand, 20, Elements.LIGHT);
         task.setRunnable(() -> {
             location.add(location.getDirection());
-            player.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location, 1, 0, 0, 0, 0);
+            player.getWorld().spawnParticle(Particle.FIREWORK, location, 1, 0, 0, 0, 0);
             Entity target = getTarget(location);
             if (target instanceof LivingEntity && target != player) {
                 if (damagesTarget(target, player, location, wand)) {

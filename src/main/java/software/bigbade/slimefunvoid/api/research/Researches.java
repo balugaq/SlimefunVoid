@@ -35,7 +35,7 @@ public enum Researches {
     private final Research research;
 
     Researches(String key, int cost, SlimefunItemStack item) {
-        this.research = new Research(new NamespacedKey(SlimefunVoid.getInstance(), key.toLowerCase().replace(" ", "_")), ResearchIDHandler.nextID(), key, cost);
+        this.research = new Research(new NamespacedKey(SlimefunVoid.getInstance(), item.getItemId().toLowerCase().replace("_research", "")), ResearchIDHandler.nextID(), key, cost);
         research.addItems(item);
         research.register();
     }

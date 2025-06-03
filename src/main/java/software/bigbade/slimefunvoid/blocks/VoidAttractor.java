@@ -46,9 +46,9 @@ public class VoidAttractor extends SlimefunItem {
             public void tick(Block block, SlimefunItem slimefunItem, Config config) {
                 EnderCrystal crystal = crystals.get(block.getLocation());
                 if (crystal == null) {
-                    Collection<Entity> nearby = block.getWorld().getNearbyEntities(block.getLocation().add(.5, 0, .5), .1, .5, .1, type -> (type.getType() == EntityType.ENDER_CRYSTAL));
+                    Collection<Entity> nearby = block.getWorld().getNearbyEntities(block.getLocation().add(.5, 0, .5), .1, .5, .1, type -> (type.getType() == EntityType.END_CRYSTAL));
                     if (nearby.isEmpty()) {
-                        crystal = (EnderCrystal) block.getWorld().spawnEntity(block.getLocation().add(.5, 0, .5), EntityType.ENDER_CRYSTAL);
+                        crystal = (EnderCrystal) block.getWorld().spawnEntity(block.getLocation().add(.5, 0, .5), EntityType.END_CRYSTAL);
                         crystal.setShowingBottom(false);
                     } else {
                         crystal = (EnderCrystal) nearby.iterator().next();
@@ -76,7 +76,7 @@ public class VoidAttractor extends SlimefunItem {
             public void onPlayerPlace(BlockPlaceEvent e) {
                 Block placing = e.getBlockPlaced();
                 placing.setType(Material.BARRIER);
-                EnderCrystal crystal = (EnderCrystal) placing.getWorld().spawnEntity(placing.getLocation().add(.5, 0, .5), EntityType.ENDER_CRYSTAL);
+                EnderCrystal crystal = (EnderCrystal) placing.getWorld().spawnEntity(placing.getLocation().add(.5, 0, .5), EntityType.END_CRYSTAL);
                 crystals.put(placing.getLocation(), crystal);
                 crystal.setShowingBottom(false);
                 BlockStorage.store(placing, Items.VOID_ATTRACTOR);

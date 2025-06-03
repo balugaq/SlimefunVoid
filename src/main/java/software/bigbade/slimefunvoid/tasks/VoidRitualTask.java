@@ -42,7 +42,7 @@ public class VoidRitualTask implements Runnable {
             Vector current = portalVec.clone();
             int i = 0;
             while (i < 20) {
-                portal.getWorld().spawnParticle(Particle.SPELL_WITCH, current.getX(), current.getY(), current.getZ(), 1, 0, 0, 0, 0);
+                portal.getWorld().spawnParticle(Particle.WITCH, current.getX(), current.getY(), current.getZ(), 1, 0, 0, 0, 0);
                 current.add(movement);
                 i++;
             }
@@ -58,7 +58,7 @@ public class VoidRitualTask implements Runnable {
                 return;
             }
             Objects.requireNonNull(pedestal.getWorld());
-            pedestal.getWorld().spawnParticle(Particle.SPELL_WITCH, item.getLocation(), 50, 0, 0, 0, 1);
+            pedestal.getWorld().spawnParticle(Particle.WITCH, item.getLocation(), 50, 0, 0, 0, 1);
             pedestal.getWorld().playSound(item.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 1L, 1L);
             item.remove();
             stage += 1;
@@ -75,7 +75,7 @@ public class VoidRitualTask implements Runnable {
         } else {
             portal.getWorld().dropItem(drop, output).setVelocity(new Vector(0, .1, 0));
         }
-        portal.getWorld().spawnParticle(Particle.SPELL_WITCH, drop, 200, 0, 0, 0, 1);
+        portal.getWorld().spawnParticle(Particle.WITCH, drop, 200, 0, 0, 0, 1);
         data.setInUse(false);
     }
 

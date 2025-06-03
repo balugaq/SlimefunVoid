@@ -27,7 +27,7 @@ public class TeleportSpell extends BasicSpell {
         location.add(ThreadLocalRandom.current().nextDouble(distance) - (half), 0, ThreadLocalRandom.current().nextDouble(distance) - (half));
         location.setY(player.getWorld().getHighestBlockAt(location).getLocation().getY() + 1);
         player.teleport(location);
-        player.getWorld().spawnParticle(Particle.CRIT_MAGIC, location, 200);
+        player.getWorld().spawnParticle(Particle.CRIT, location, 200);
     }
 
     @Override
